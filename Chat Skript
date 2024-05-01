@@ -1,0 +1,62 @@
+command /chat-reino:
+	trigger:
+		if {Modo Chat::%player%} is "offrol" or "rol":
+			set {Modo Chat::%player%} to "reino"
+			send "&6&l(&eCHAT&6&l) &eActivaste el chat &6&lREINO"
+		else if {Modo Chat::%player%} is "reino":
+			set {Modo Chat::%player%} to "offrol"
+			send "&6&l(&eCHAT&6&l) &eActivaste el chat &6&lOFF ROL"
+
+command /off-rol:
+	aliases: or
+	trigger:
+		set {Modo Chat::%player%} to "offrol"
+		send "&6&l(&eCHAT&6&l) &eActivaste el chat &6&lOFF ROL"
+
+command /rol:
+	trigger:
+		set {Modo Chat::%player%} to "rol"
+		send "&6&l(&eCHAT&6&l) &eActivaste el chat &6&lROL"
+
+command /narrador [<text>]:
+	aliases: narrar
+	trigger:
+		if arg is set:
+			broadcast "&2&lNARRADOR: &a%arg%"
+			create embed:
+				set title of the embed to "**NARRADOR**"
+				set description of the embed to arg
+				set color of the embed to red
+				set footer of embed to footer with text "Chat Rol | Black Clover: Runic Wars"
+			send last created embed to channel with id "840076371677020173" with "Secre Swallowtail"
+
+on chat:
+	if {Modo Chat::%player%} is not set:
+		set {Modo Chat::%player%} to "offrol"
+	if {Modo Chat::%player%} is "offrol":
+		set {_mensaje} to message
+		cancel event
+		broadcast "&4&l(&cOFF-ROL&4&l) %displayname of player% &7» %{_mensaje}%"
+		create embed:
+			set title of the embed to uncolored player's display name
+			set description of the embed to "%{_mensaje}%"
+			set color of the embed to red
+			set footer of embed to footer with text "Chat Off Rol | Black Clover: Runic Wars"
+		send last created embed to channel with id "804517403936817172" with "Secre Swallowtail"
+	else if {Modo Chat::%player%} is "rol":
+		set {_mensaje} to message
+		cancel event
+		broadcast "&2&l(&aROL&2&l) %displayname of player% &7» %{_mensaje}%"
+		create embed:
+			set title of the embed to uncolored player's display name
+			set description of the embed to "%{_mensaje}%"
+			set color of the embed to red
+			set footer of embed to footer with text "Chat Rol | Black Clover: Runic Wars"
+		send last created embed to channel with id "840076371677020173" with "Secre Swallowtail"
+	else if {Modo Chat::%player%} is "reino":
+		set {_mensaje} to message
+		cancel event
+		loop all players:
+			if {Reino %loop-player%} is {Reino %player%}:
+				send "&6&l(&eREINO&6&l) %displayname of player% &7» %{_mensaje}%" to loop-player
+		send "&6&l(&eREINO&6&l) %displayname of player% &7» %{_mensaje}%" to console
