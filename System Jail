@@ -1,0 +1,123 @@
+#! Definir Jail
+
+command /definir-jail [<text>]:
+	trigger:
+		if arg is not set:
+			stop
+		if player has permission "bc.core.jail":
+			if {Jails::*} doesn't contain arg:
+				add arg to {Jails::*}
+				set {Jails::%arg%::coords} to location of player
+				send "&4&l(&c&l!&4&l) &cDefiniste la jail &4%arg% &cen las coordenadas &4%{Jails::%arg%::coords}%"
+			else:
+				send "&4&l(&c&l!&4&l) &c¡Ya está definida una jail con este nombre!"
+		else:
+			send "&4&l(&c&l!&4&l) &cNo tienes permisos para hacer esto."
+
+#! Borrar Jail
+
+command /borrar-jail [<text>]:
+	trigger:
+		if arg is not set:
+			stop
+		if player has permission "bc.core.jail":
+			if {Jails::*} contains arg:
+				remove arg from {Jails::*}
+				delete {Jails::%arg%::coords}
+				send "&4&l(&c&l!&4&l) &cBorraste la jail &4%arg%"
+			else:
+				send "&4&l(&c&l!&4&l) &c¡No existe una jail definida con este nombre!"
+		else:
+			send "&4&l(&c&l!&4&l) &cNo tienes permisos para hacer esto."
+
+#! Meter Jail
+
+command /jailear [<player>] [<text>] [<integer>]:
+	trigger:
+		if player has permission "bc.core.jail":
+			if arg-1 and arg-2 is set:
+				if {Jails::*} contains arg-2:
+					if {esta jail %arg-1%} is not set:
+						if arg-3 is set:
+							set {esta jail %arg-1%} to true
+							set {loc anterior %arg-1%} to location of arg-1
+							add arg-1 to {Jaileados::*}
+							set {tiempo jail %arg-1%} to arg-3
+							set {jaileado en %arg-1%} to arg-2
+							teleport arg-1 to {Jails::%arg-2%::coords}
+							send "&4&l(&c&l!&4&l) &cMetiste a &4%arg-1% &cen la jail &4%arg-2% &cpor &4%arg-3% &csegundos." to player
+							send "&cFuiste jaileado por &4%arg-3% &csegundos." to arg-1
+						else:
+							set {esta jail %arg-1%} to true
+							set {loc anterior %arg-1%} to location of arg-1
+							add arg-1 to {Jaileados::*}
+							set {jaileado en %arg-1%} to arg-2
+							teleport arg-1 to {Jails::%arg-2%::coords}
+							send "&4&l(&c&l!&4&l) &cMetiste a &4%arg-1% &cen la jail &4%arg-2% &cpor un tiempo indefinido." to player
+							send "&cFuiste jaileado por un tiempo indefinido." to arg-1
+					else:
+						send "&c¡El jugador mencionado ya esta jail!"
+				else:
+					send "&cNo existe una jail con ese nombre." to player
+			else:
+				send "&cUso correcto: /jailear (jugador) (jail) (tiempo)" to player
+		else:
+			send "&4&l(&c&l!&4&l) &cNo tienes permisos para hacer esto."
+
+#! Sacar Jail
+
+command /sacar-jail [<player>]:
+	trigger:
+		if arg is set:
+			if player has permission "bc.core.jail":
+				if {esta jail %arg%} is set:
+					send "&cFuiste liberado." to arg
+					send "&cLiberaste a %arg%" to player
+					teleport arg to {loc anterior %arg%}
+					remove arg from {Jaileados::*}
+					delete {loc anterior %arg%}
+					delete {esta jail %arg%}
+					delete {tiempo jail %arg%}
+					delete {jaileado en %arg%}
+				else:
+					send "&cEl jugador mencionado no está en jail"
+			else:
+				send "&4&l(&c&l!&4&l) &cNo tienes permisos para hacer esto."
+
+#! Eventos
+
+on command "/spawn" or "/cast":
+	if {esta jail %player%} is set:
+		cancel event
+on damage:
+	if {esta jail %attacker%} is set:
+		cancel event
+on respawn:
+	if {esta jail %player%} is set:
+		teleport player to {Jails::%{jaileado en %player%}%::coords}
+
+every 1 second:
+	set {_c} to 0
+	loop {Jaileados::*}:
+		add 1 to {_c}
+		if {tiempo jail %{Jaileados::%{_c}%}%} is set:
+			if {tiempo jail %{Jaileados::%{_c}%}%} is more than 0:
+				remove 1 from {tiempo jail %{Jaileados::%{_c}%}%}
+			else:
+				if {Jaileados::%{_c}%} is online:
+					teleport {Jaileados::%{_c}%} to {loc anterior %{Jaileados::%{_c}%}%}
+					delete {loc anterior %{Jaileados::%{_c}%}%}
+					delete {esta jail %{Jaileados::%{_c}%}%}
+					delete {tiempo jail %{Jaileados::%{_c}%}%}
+					delete {jaileado en %{Jaileados::%{_c}%}%}
+					remove {Jaileados::%{_c}%} from {Jaileados::*}
+				else:
+					set {pendiente por salir %{Jaileados::%{_c}%}%} to true
+					delete {esta jail %{Jaileados::%{_c}%}%}
+					delete {tiempo jail %{Jaileados::%{_c}%}%}
+					delete {jaileado en %{Jaileados::%{_c}%}%}
+					remove {Jaileados::%{_c}%} from {Jaileados::*}
+on join:
+	if {pendiente por salir %player%} is set:
+		teleport player to {loc anterior %player%}
+		delete {loc anterior %player%}
