@@ -1,0 +1,262 @@
+on break:
+	if {estamina usada %player%} is not set:
+		set {estamina usada %player%} to 0
+	if difference between {cd estamina %player%} and now is less than 4 minutes:
+		cancel event
+		set {_tiempo corrido} to difference between {cd estamina %player%} and now
+		set {_mensaje} to "&2&l(&aESTAMINA&2&l) &aDebería descansar aún... &2(&a%difference between {_tiempo corrido} and 5 minutes% &arestantes.&2)"
+		replace all "and" with "y" in {_mensaje}
+		replace all "seconds" with "segundos" in {_mensaje}
+		replace all "minutes" with "minutos" in {_mensaje}
+		replace all "minute" with "minuto" in {_mensaje}
+		replace all "second" with "segundo" in {_mensaje}
+		send {_mensaje} to player
+		stop
+	if player is in the region "minarcorazon" or "minadiamante" or "minartrebol":
+		if player's tool is a pickaxe:
+			if event-block is not a gold ore:
+				send "&4&l(&c!&4&l) &f¡Esto no es un &eMineral&f!" to player
+				cancel event
+				stop
+			else:
+				cancel drops
+				set block to cobblestone
+				if {estamina usada %player%} is less than 20:
+					if name of tool of player is "&8&l|| &6Pico de &7Piedra &8&l||" or "&8&l|| &6Pico de Cobre &8&l||" or "&7&l|| &6Pico de &7Cinc &7&l||":
+						add 1 to {estamina usada %player%}
+						set {_probabilidad} to random integer between 1 and 100
+						if {_probabilidad} is less or equal to 20:
+							set {_probabilidad} to random integer between 1 and 2
+							if {_probabilidad} is equal to 1:
+								make console execute command "mi give MATERIAL ZINC %player%"
+								send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+							else if {_probabilidad} is equal to 2:
+								make console execute command "mi give MATERIAL COBRE %player%"
+								send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 80:
+							make console execute command "mi give MATERIAL CARBON %player% 1-3"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 100:
+							make console execute command "mi give MATERIAL PIEDRA %player%"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if name of tool of player is "&8&l|| &6Pico de &7Laton &8&l||" or "&7&l|| &6Pico de &8Hierro &7&l||" or "&7&l|| &6Pico de &eOro &7&l||" or "&8&l|| &6Pico de &8Acero &8&l||":
+						add 1 to {estamina usada %player%}
+						set {_probabilidad} to random integer between 1 and 100
+						if {_probabilidad} is less or equal to 15:
+							set {_probabilidad} to random integer between 1 and 2
+							if {_probabilidad} is equal to 1:
+								make console execute command "mi give MATERIAL ORO %player%"
+								send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+							else if {_probabilidad} is equal to 2:
+								make console execute command "mi give MATERIAL HIERRO %player%"
+								send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 60:
+							set {_probabilidad} to random integer between 1 and 2
+							if {_probabilidad} is equal to 1:
+								make console execute command "mi give MATERIAL ZINC %player%"
+								send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+							else if {_probabilidad} is equal to 2:
+								make console execute command "mi give MATERIAL COBRE %player%"
+								send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 80:
+							make console execute command "mi give MATERIAL CARBON %player% 1-4"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 100:
+							make console execute command "mi give MATERIAL PIEDRA %player%"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else:
+						send "&4&l(&c!&4&l) &f¡Necesitas minimo un &8&l|| &6Pico de &7Piedra &8&l|| &fpara romper este Mineral!" to player
+				wait 10 seconds
+				set block to gold ore
+		else:
+			cancel event
+			stop
+	else if player is in the region "minapenasco":
+		if player's tool is a pickaxe:
+			if event-block is not a redstone ore:
+				send "&4&l(&c!&4&l) &f¡Esto no es un &cMineral&f!" to player
+				cancel event
+				stop
+			else:
+				cancel drops
+				set block to redstone ore
+			if {estamina usada %player%} is less than 20:
+				if name of tool of player is "&8&l|| &6Pico de &7Laton &8&l||" or "&7&l|| &6Pico de &8Hierro &7&l||" or "&7&l|| &6Pico de &eOro &7&l||":
+					add 1 to {estamina usada %player%}
+					set {_probabilidad} to random integer between 1 and 100
+					if {_probabilidad} is less or equal to 20:
+						make console execute command "mi give MATERIAL RUBY %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 20:
+						make console execute command "mi give MATERIAL ORO %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 60:
+						make console execute command "mi give MATERIAL HIERRO %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 60:
+						make console execute command "mi give MATERIAL ZINC %player% 1-2"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 70:
+						make console execute command "mi give MATERIAL COBRE %player% 1-2"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 100:
+						make console execute command "mi give MATERIAL CARBON %player% 2-3"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+				else if name of tool of player is "&8&l|| &6Pico de &8Acero &8&l||" or "&3&l|| &6Pico de &bDiamante &3&l||" or "&8&l|| &6Pico de &bDiamante &dMagico &8&l||" or "&6&l|| &6Pico de Ferromanganeso &6&l||":
+					add 1 to {estamina usada %player%}
+					set {_probabilidad} to random integer between 1 and 100
+					if {_probabilidad} is less or equal to 20:
+						make console execute command "mi give MATERIAL MANGANESO %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 40:
+						make console execute command "mi give MATERIAL RUBY %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 40:
+						make console execute command "mi give MATERIAL ESMERALDA %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 60:
+						make console execute command "mi give MATERIAL HIERRO %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 60:
+						make console execute command "mi give MATERIAL ORO %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 70:
+						make console execute command "mi give MATERIAL ZINC %player% 1-2"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 100:
+						make console execute command "mi give MATERIAL COBRE %player% 1-3"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+				else:
+					send "&4&l(&c!&4&l) &fNecesitas minimo un &8&l|| &6Pico de &7Laton &8&l|| &fpara picar esto." to player
+		else:
+			cancel event
+			stop
+	else if player is in the region "minaalmaden":
+		if player's tool is a pickaxe:
+			if event-block is not a diamond ore:
+				send "&4&l(&c!&4&l) &f¡Esto no es un &bMineral&f!" to player
+				cancel event
+				stop
+			else:
+				cancel drops
+				set block to diamond ore
+			if {estamina usada %player%} is less than 20:
+				if name of tool of player is "&3&l|| &6Pico de &bDiamante &3&l||" or "&8&l|| &6Pico de &bDiamante &dMagico &8&l||" or "&6&l|| &6Pico de Ferromanganeso &6&l||":
+					add 1 to {estamina usada %player%}
+					set {_probabilidad} to random integer between 1 and 100
+					if {_probabilidad} is less or equal to 10:
+						make console execute command "mi give MATERIAL DIAMANTE %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 10:
+						make console execute command "mi give MATERIAL STELLANIUM %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 30:
+						make console execute command "mi give MATERIAL MANGANESO %player%"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 50:
+						make console execute command "mi give MATERIAL RUBY %player% 1-2"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 50:
+						make console execute command "mi give MATERIAL ESMERALDA %player% 1-2"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 70:
+						make console execute command "mi give MATERIAL HIERRO %player% 1-3"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if {_probabilidad} is less or equal to 100:
+						make console execute command "mi give MATERIAL ORO %player% 1-4"
+						send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+				else:
+					send "&4&l(&c!&4&l) &fNecesitas minimo un &6&l|| &6Pico de Ferromanganeso &6&l|| &fpara picar esto." to player
+		else:
+			cancel event
+	else if player is in the region "talarcorazon" or "talardiamante" or "talartrebol":
+		if player's tool is a axe:
+			if event-block is stripped oak log:
+				cancel drops
+				set block to stripped oak log
+				if {estamina usada %player%} is less than 20:
+					if name of tool of player is "&8&l|| &6Hacha de &7Piedra &8&l||" or "&8&l|| &6Hacha de Cobre &8&l||" or "&7&l|| &6Hacha de &7Cinc &7&l||":
+						add 1 to {estamina usada %player%}
+						set {_probabilidad} to random integer between 1 and 100
+						if {_probabilidad} is less or equal to 20:
+							make console execute command "mi give MATERIAL PAPEL %player% 1-2"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 60:
+							make console execute command "mi give MATERIAL RAMA_DE_ROBLE %player%"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 100:
+							make console execute command "mi give MATERIAL MADERADEROBLE %player%"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else:
+						send "&4&l(&c!&4&l) &fNecesitas minimo un &8&l|| &6Hacha de &7Piedra &8&l|| &fpara talar esto." to player
+			else if event-block is stripped birch log:
+				cancel drops
+				set block to stripped birch log
+				if {estamina usada %player%} is less than 20:
+					if name of tool of player is "&8&l|| &6Hacha de Cobre &8&l||" or "&7&l|| &6Hacha de &7Cinc &7&l||":
+						add 1 to {estamina usada %player%}
+						set {_probabilidad} to random integer between 1 and 100
+						if {_probabilidad} is less or equal to 20:
+							make console execute command "mi give MATERIAL PAPEL %player% 1-2"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 60:
+							make console execute command "mi give MATERIAL RAMA_DE_ABEDUL %player%"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 100:
+							make console execute command "mi give MATERIAL MADERADEABEDUL %player%"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else:
+						send "&4&l(&c!&4&l) &fNecesitas minimo un &8&l|| &6Hacha de Cobre &8&l|| &fo &7&l|| &6Hacha de &7Cinc &7&l|| &fpara talar esto." to player
+			else:
+				send "&4&l(&c!&4&l) &f¡Esto no es un &6Tronco&f!" to player
+				cancel event
+				stop
+		else:
+			cancel event
+	else if player is in the region "bosquenegro":
+		if player's tool is a axe:
+			if event-block is spruce log:
+				cancel drops
+				set block to spruce log
+				if {estamina usada %player%} is less than 20:
+					if name of tool of player is "&8&l|| &6Hacha de &7Laton &8&l||":
+						add 1 to {estamina usada %player%}
+						set {_probabilidad} to random integer between 1 and 100
+						if {_probabilidad} is less or equal to 20:
+							make console execute command "mi give MATERIAL PAPEL %player% 1-2"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 40:
+							set {_x} to player's x-coord
+							set {_y} to player's y-coord
+							set {_z} to player's z-coord
+							make console execute command "mm m spawn RaizMacabra MapaBlackCloverMariano,%{_x}%,%{_y}%,%{_z}%,0,0"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 60:
+							make console execute command "mi give MATERIAL RAMA_DE_PINO %player%"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 100:
+							make console execute command "mi give MATERIAL MADERADEPINO %player%"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else if name of tool of player is "&7&l|| &6Hacha de &eOro &7&l||" or "&8&l|| &6Hacha de &8Acero &8&l||" or "&6&l|| &6Hacha de Ferromanganeso &6&l||" or "&3&l|| &6Hacha de &bDiamante &3&l||" or "&8&l|| &6Hacha de &bDiamante &dMagico &8&l||":
+						add 1 to {estamina usada %player%}
+						set {_probabilidad} to random integer between 1 and 100
+						if {_probabilidad} is less or equal to 20:
+							make console execute command "mi give MATERIAL PAPEL %player% 1-2"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 60:
+							make console execute command "mi give MATERIAL RAMA_DE_ABETO %player%"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+						else if {_probabilidad} is less or equal to 100:
+							make console execute command "mi give MATERIAL MADERADEABETO %player%"
+							send "&8&l(&7MINA&8&l) &8(&7%{estamina usada %player%}%&8/&720 estamina restante.&8)"
+					else:
+						send "&4&l(&c!&4&l) &fNecesitas minimo un &7&l|| &6Hacha de &7Laton &7&l|| &fpara talar esto." to player
+			else:
+				send "&4&l(&c!&4&l) &f¡Esto no es un &6Tronco&f!" to player
+				cancel event
+				stop
+		else:
+			cancel event
+	if {estamina usada %player%} is more or equal to 20:
+		delete {estamina usada %player%}
+		set {cd estamina %player%} to now
