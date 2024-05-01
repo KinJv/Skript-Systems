@@ -1,0 +1,833 @@
+#date(year: number, month: number, day: number)
+#enero: 1 (31), marzo 3 (31), mayo: 5 (31), julio: 7 (31), agosto: 8 (31), octubre: 10 (31), diciembre: 12 (31)
+#abril: 4 (30), junio: 6 (30), septiembre: 9 (30), noviembre: 11 (30)
+#febrero: 2 (28)
+#►
+import:
+	org.bukkit.Bukkit
+
+on chat:
+	if {Creando PJ::%player%} is set:
+		cancel event
+	else:
+		loop all players:
+			if {Creando PJ::%loop-player%} is not set:
+				add loop-player to chat recipients
+
+on join:
+	if {Nombre Ninja::%player%} is not set:
+		teleport player to location(56.5, 4, -350.5, "otro_mundo" parsed as world, 269, 0)
+		send title "&4&l¡Crea tu Personaje!" with subtitle "&cAún no has creado tu personaje, habla con Hagoromo" to player
+	if {Creando PJ::%player%} is set:
+		send title "&a&2Te desconectaste" with subtitle "&aHas aparecido en el lugar que quedaste en el Creador de Personaje" to player
+
+on NPC right click:
+	if event-number is 11:
+		if {Nombre Ninja::%player%} is not set:
+			hide player from all players
+			set {Creando PJ::%player%} to 1
+			teleport player to location(-246.5, 5, -198.5, "otro_mundo" parsed as world, 180, 0)
+			send title "&eIdentidad" with subtitle "&bEscoge tu nombre en Rol, escribiendolo en chat" to player
+			message "&5Sistema &8► &dEscoge tu nombre en Rol, piensa bien que nombre tendrás ya que después no podrás cambiarlo. Cuando ya hayas escogido tu nombre escribe &5confirmar &den el chat." to player
+		else:
+			send action bar "&aHas sido teletransportado al Spawn" to player
+			teleport player to spawn of the world "Naruto_Revolution_Final"
+	else:
+		if {Creando PJ::%player%} is 2:
+			if event-number is 10: # Hombre
+				set {Sexo::%player%} to "&bMasculino"
+				set {Creando PJ::%player%} to 3
+				send title "&b&lMasculino" with subtitle "&bAhora perteneces al género masculino" to player
+				wait 2 seconds
+				teleport player to location(-246.5, 5, -198.5, "otro_mundo" parsed as world, 180, 0)
+				message "%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%"
+				message "&5Sistema &8► &dDinos la fecha de Nacimiento que tendrá tu Personaje, esto para gestionar de forma automática tu edad en Rol. El formato a seguir es &5<dia> <mes> <tu edad>&d.%nl%&5Ejemplo: &d4 2 19, lo que equivale a 4 de Febrero de 2001"
+				send title "&eFecha de Nacimiento" with subtitle "&bDinos la fecha de nacimiento de tu Personaje" to player
+			else if event-number is 9: # Mujer
+				set {Sexo::%player%} to "&dFemenino"
+				set {Creando PJ::%player%} to 3
+				send title "&d&lFemenino" with subtitle "&dAhora perteneces al género femenino" to player
+				wait 2 seconds
+				teleport player to location(-246.5, 5, -198.5, "otro_mundo" parsed as world, 180, 0)
+				message "%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%"
+				message "&5Sistema &8► &dDinos la fecha de Nacimiento que tendrá tu Personaje, esto para gestionar de forma automática tu edad en Rol. El formato a seguir es &5<dia> <mes> <tu edad>&d.%nl%&5Ejemplo: &d4 2 19, lo que equivale a 4 de Febrero de 2001"
+				send title "&eFecha de Nacimiento" with subtitle "&bDinos la fecha de nacimiento de tu Personaje" to player
+			else if event-number is 12: # No Binario
+				set {Sexo::%player%} to "&8No Binario"
+				set {Creando PJ::%player%} to 3
+				send title "&8&lNo Binario" with subtitle "&8Tu sexo es No Binario" to player
+				wait 2 seconds
+				teleport player to location(-246.5, 5, -198.5, "otro_mundo" parsed as world, 180, 0)
+				message "%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%"
+				message "&5Sistema &8► &dDinos la fecha de Nacimiento que tendrá tu Personaje, esto para gestionar de forma automática tu edad en Rol. El formato a seguir es &5<dia> <mes> <tu edad>&d.%nl%&5Ejemplo: &d4 2 19 lo que equivale a 4 de Febrero de 2001"
+				send title "&eFecha de Nacimiento" with subtitle "&bDinos la fecha de nacimiento de tu Personaje" to player
+
+#! Nombre
+
+on chat:
+	if {Creando PJ::%player%} is 1:
+		cancel event
+		if message is "pene", "vagina", "culo", "pito", "pija", "chota", "weon", "maricon", "homosexual", "homo" or "gay":
+			send title "&4&l¡Cuidado!" with subtitle "&cCrea un nombre que no sea ofensivo." to player
+		else:
+			if message is not "confirmar":
+				set {_a::*} to message split at " "
+				if size of {_a::*} is more than 1:
+					send title "&4&l¡Muy Largo!" with subtitle "&cCrea un nombre más corto" to player
+				else:
+					set player's display name to message
+					set {Nombre Ninja::%player%} to message
+					send title message with subtitle "&bSi quieres este nombre escribe &econfirmar" to player
+			else:
+				set {Creando PJ::%player%} to 2
+				teleport player to location(-55.5, 7, -128.5, "otro_mundo" parsed as world, 88, 0)
+				message "%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%%nl%"
+				message "&5Sistema &8► &dEscoge tu sexo tocando a uno de los NPCs. El sexo no podrás cambiarlo en un futuro, así que escoge bien." to player
+				send title "&5Sexo" with subtitle "&dPor favor escoge tu sexo tocando a los NPC" to player
+	else if {Creando PJ::%player%} is 3:
+		cancel event
+		set {_fechas::*} to message split at " "
+		if {_fechas::1} parsed as integer is a integer:
+			set {_dia} to {_fechas::1} parsed as number
+		else:
+			message "&5Sistema &8► &4¡Error! &dPor favor menciona un número válido"
+			stop
+		if {_fechas::2} parsed as integer is a integer:
+			if {_mes} is 1, 3, 5, 7, 8, 10 or 12:
+				if {_dia} is less or equal to 31:
+					set {_mes} to {_fechas::2} parsed as number
+				else:
+					message "&5Sistema &8► &4¡Error! &dPor favor menciona un día válido... Enero, Marzo, Mayo, Julio, Agosto, Octubre y Diciembre solo tienen 31 días."
+					stop
+			else if {_mes} is 4, 6, 9 or 11:
+				if {_dia} is less or equal to 30:
+					set {_mes} to {_fechas::2} parsed as number
+				else:
+					message "&5Sistema &8► &4¡Error! &dPor favor menciona un día válido... Abril, Junio, Septiembre y Noviembre solo tienen 30 días."
+					stop
+			else if {_mes} is 2:
+				if {_dia} is less or equal to 28:
+					set {_mes} to {_fechas::2} parsed as number
+				else:
+					set {_año} to {Fecha Actual Servidor} formatted as "yyyy"
+					set {_diferencia} to difference between {_fechas::3} and {_año}
+					set {_año} to {_año} - {_diferencia}
+					if mod({_año}, 4) is 0:
+						set {_mes} to {_fechas::2}
+					else:
+						message "&5Sistema &8► &4¡Error! &dPor favor menciona un día válido, Febrero solo tiene 28 días, 29 si es año biciesto."
+						stop
+			set {_mes} to {_fechas::2} parsed as integer
+		else:
+			message "&5Sistema &8► &4¡Error! &dPor favor escoge una edad válida."
+			stop
+		if {_fechas::3} parsed as integer is between 8 and 14:
+			set {_edad} to {_fechas::3} parsed as integer
+		else:
+			message "&5Sistema &8► &4¡Error! &dPor favor escoge una edad que ronde entre los 8 y 14 años."
+			stop
+		set {_año} to {Fecha Actual Servidor} formatted as "yyyy"
+		set {_año} to {_año} parsed as integer
+		set {_año} to {_año} - {_edad}
+		set {Fecha Nacimiento::%player%} to date({_año}, {_mes}, {_dia}, 0, 0, 0, 0)
+		set {_año} to {Fecha Actual Servidor} formatted as "yyyy" parsed as integer
+		set {Fecha Cumpleaños::%player%} to date({_año}, {_mes}, {_dia}, 0, 0, 0, 0)
+
+		teleport player to location(-179.5, 7, -114.5, "otro_mundo" parsed as world, 267, 0)
+		send title "&eAldea" with subtitle "&bEscoge tu aldea tocando el cristal" to player
+		message "&5Sistema &8► &dPor favor escoge una aldea tocando el cristal correspondiente a ella."
+		set {Creando PJ::%player%} to 4
+
+on right click:
+	if clicked block is set:
+		if {Creando PJ::%player%} is 4:
+			if clicked block is red stained glass or red stained glass pane:
+				escogerAldea(player, "Konohagakure")
+			else if clicked block is lime stained glass or lime stained glass pane:
+				escogerAldea(player, "Sunagakure")
+			else if clicked block is blue stained glass or blue stained glass pane:
+				escogerAldea(player, "Kirigakure")
+			else if clicked block is brown stained glass or brown stained glass pane:
+				escogerAldea(player, "Iwagakure")
+			else if clicked block is yellow stained glass or yellow stained glass pane:
+				escogerAldea(player, "Kumogakure")
+		else if {Creando PJ::%player%} is 5:
+			if clicked block is end portal frame block:
+				if {Eleccion de Clan::%player%} is not set:
+					if {Escogiendo Clan::%player%} is true:
+						stop
+					set {Escogiendo Clan::%player%} to true
+					set {_p} to player
+					set {_inv} to Bukkit.createInventory(null, 27, "&lEscogiendo Clan")
+					{_p}.openInventory({_inv})
+					set {_c} to -1
+					loop 13 times:
+						add 1 to {_c}
+						set slot {_c} of player's current inventory to black stained glass pane named "&0&l..."
+					set {_c} to 13
+					loop 13 times:
+						add 1 to {_c}
+						set slot {_c} of player's current inventory to black stained glass pane named "&0&l..."
+					set slot 13 of player's current inventory to barrier named "&cNinguno"
+					escogiendoClan(player, uncolored {Aldea::%player%})
+				else:
+					set {_p} to player
+					set {_inv} to Bukkit.createInventory(null, 9, "&lUsando Eleccion de Clan")
+					{_p}.openInventory({_inv})
+					if {Aldea::%player%} contains "Konoha":
+						set {_clanes::*} to "&4Uchiha", "&bHyuga" and "&2Senju"
+					else if {Aldea::%player%} contains "Suna":
+						set {_clanes::*} to "&aShirogane", "&eKazekage" and "&bRyuuyi"
+					else if {Aldea::%player%} contains "Iwa":
+						set {_clanes::*} to "&7Kinzoku", "&6Kamizuru" and "&eBakuton"
+					else if {Aldea::%player%} contains "Kumo":
+						set {_clanes::*} to "&9Yotsuki", "&8Raisoku" and "&cChinoike"
+					else if {Aldea::%player%} contains "Kiri":
+						set {_clanes::*} to "&3Hozuki", "&9Hoshigaki" and "&bYuki"
+					set slot 1 of player's current inventory to yellow stained glass pane named "%{_clanes::1}%"
+					set slot 2 of player's current inventory to yellow stained glass pane named "%{_clanes::2}%"
+					set slot 3 of player's current inventory to yellow stained glass pane named "%{_clanes::3}%"
+					set slot 5 of player's current inventory to red stained glass pane named "&cUzumaki"
+					set slot 6 of player's current inventory to red stained glass pane named "&fKaguya"
+
+on inventory click:
+	if inventory name of current inventory of player = "&lEscogiendo Clan":
+		cancel event
+	else if inventory name of current inventory of player = "&lUsando Eleccion de Clan":
+		cancel event
+		if event-slot is 1:
+			if {Aldea::%player%} contains "Konoha":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_uchiha"
+				set {Clan::%player%} to "&4Uchiha"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Suna":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_shirogane"
+				set {Clan::%player%} to "&aShirogane"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Iwa":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_kinzoku"
+				set {Clan::%player%} to "&7Kinzoku"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Kumo":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_yotsuki"
+				set {Clan::%player%} to "&9Yotsuki"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 5
+				wait 2 seconds
+				close {_user}'s inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to {Creador Personaje Discord}
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Kiri":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_hozuki"
+				set {Clan::%player%} to "&3Hozuki"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+		else if event-slot is 2:
+			if {Aldea::%player%} contains "Konoha":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_hyuga"
+				set {Clan::%player%} to "&bHyuga"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Suna":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_kazekage"
+				set {Clan::%player%} to "&eKazekage"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Iwa":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_kamizuru"
+				set {Clan::%player%} to "&6Kamizuru"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Kumo":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_raisoku"
+				set {Clan::%player%} to "&8Raisoku"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Kiri":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_hoshigaki"
+				set {Clan::%player%} to "&9Hoshigaki"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+		else if event-slot is 3:
+			if {Aldea::%player%} contains "Konoha":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_senju"
+				set {Clan::%player%} to "&2Senju"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Suna":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_ryuuyi"
+				set {Clan::%player%} to "&bRyuuyi"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Iwa":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_bakuton"
+				set {Clan::%player%} to "&eBakuton"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Kumo":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_chinoike"
+				set {Clan::%player%} to "&cChinoike"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+			else if {Aldea::%player%} contains "Kiri":
+				close player's inventory
+				make console execute command "lp user %player% parent set g_yuki"
+				set {Clan::%player%} to "&bYuki"
+				delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+				set {Creando PJ::%player%} to 6
+				wait 2 seconds
+				close player's inventory
+				send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+				wait 2 seconds
+				teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+				message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+				send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+		else if event-slot is 5:
+			close player's inventory
+			if {Aldea::%player%} contains "konoha":
+				make console execute command "lp user %player% parent set g_uzumaki_hoja"
+			else if {Aldea::%player%} contains "kumo":
+				make console execute command "lp user %player% parent set g_uzumaki_nube"
+			else if {Aldea::%player%} contains "suna":
+				make console execute command "lp user %player% parent set g_uzumaki_arena"
+			else if {Aldea::%player%} contains "kiri":
+				make console execute command "lp user %player% parent set g_uzumaki_niebla"
+			else if {Aldea::%player%} contains "iwa":
+				make console execute command "lp user %player% parent set g_uzumaki_roca"
+			set {Clan::%player%} to "&cUzumaki"
+			delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+			set {Creando PJ::%player%} to 6
+			wait 2 seconds
+			close player's inventory
+			send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+			wait 2 seconds
+			teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+			message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+			send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+		else if event-slot is 6:
+			close player's inventory
+			if {Aldea::%player%} contains "konoha":
+				make console execute command "lp user %player% parent set g_kaguya_hoja"
+			else if {Aldea::%player%} contains "kumo":
+				make console execute command "lp user %player% parent set g_kaguya_nube"
+			else if {Aldea::%player%} contains "suna":
+				make console execute command "lp user %player% parent set g_kaguya_arena"
+			else if {Aldea::%player%} contains "kiri":
+				make console execute command "lp user %player% parent set g_kaguya_niebla"
+			else if {Aldea::%player%} contains "iwa":
+				make console execute command "lp user %player% parent set g_kaguya_roca"
+			set {Clan::%player%} to "&fKaguya"
+			delete {Eleccion de Clan::%player%} and {Escogiendo Clan::%{_user}%}
+			set {Creando PJ::%player%} to 6
+			wait 2 seconds
+			close player's inventory
+			send title {Clan::%player%} with subtitle "&bAhora perteneces al clan %{Clan::%player%}%" to player
+			wait 2 seconds
+			teleport player to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+			message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar"
+			send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to player
+
+on inventory close:
+	if inventory name of current inventory of player = "&lEscogiendo Clan":
+		if {Escogiendo Clan::%player%} is true:
+			wait 2 ticks
+			set {_p} to player
+			set {_inv} to Bukkit.createInventory(null, 27, "&lEscogiendo Clan")
+			{_p}.openInventory({_inv})
+			set {_c} to -1
+			loop 13 times:
+				add 1 to {_c}
+				set slot {_c} of player's current inventory to black stained glass pane named "&0&l..."
+			set {_c} to 13
+			loop 13 times:
+				add 1 to {_c}
+				set slot {_c} of player's current inventory to black stained glass pane named "&0&l..."
+
+function escogerAldea(user: player, aldea: text):
+	if {_aldea} contains "Konohagakure":
+		if {Cupos Konohagakure} is not set:
+			set {Cupos Konohagakure} to 10
+		if {Usuarios::%{_aldea}%::*} is not set:
+			set {Usuarios::%{_aldea}%::*} to {_user}
+			set {Aldea::%{_user}%} to "&2Konohagakure"
+			set {Creando PJ::%{_user}%} to 5
+			send title "&2Konohagakure" with subtitle "&aAhora perteneces a &2&nKonohagakure" to {_user}
+			wait 2 seconds
+			teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+			message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+			send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+			set {Rango::%{_user}%} to "&7Gennin"
+		else:
+			if size of {Usuarios::Konohagakure::*} is less than {Cupos Konohagakure}:
+				add {_user} to {Usuarios::%{_aldea}%::*}
+				set {Aldea::%{_user}%} to "&2Konohagakure"
+				set {Creando PJ::%{_user}%} to 5
+				send title "&2Konohagakure" with subtitle "&aAhora perteneces a &2&nKonohagakure" to {_user}
+				wait 2 seconds
+				teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+				message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+				send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+				set {Rango::%{_user}%} to "&7Gennin"
+			else:
+				if {Cupos Konohagakure} is equal to {Cupos Kumogakure}, {Cupos Iwagakure}, {Cupos Kirigakure} and {Cupos Sunagakure}:
+					add 5 to {Cupos Konohagakure}, {Cupos Kumogakure}, {Cupos Iwagakure}, {Cupos Kirigakure} and {Cupos Sunagakure}
+					add {_user} to {Usuarios::%{_aldea}%::*}
+					set {Aldea::%{_user}%} to "&2Konohagakure"
+					set {Creando PJ::%{_user}%} to 5
+					send title "&2Konohagakure" with subtitle "&aAhora perteneces a &2&nKonohagakure" to {_user}
+					wait 2 seconds
+					teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+					message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+					send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+					set {Rango::%{_user}%} to "&7Gennin"
+				else:
+					send title "&4Aldea Llena" with subtitle "&cLa aldea %{_aldea}% &cestá llena. Prueba otra." to {_user}
+	else if {_aldea} contains "Kumogakure":
+		if {Cupos Kumogakure} is not set:
+			set {Cupos Kumogakure} to 10
+		if {Usuarios::%{_aldea}%::*} is not set:
+			set {Usuarios::%{_aldea}%::*} to {_user}
+			set {Aldea::%{_user}%} to "&9Kumogakure"
+			set {Creando PJ::%{_user}%} to 5
+			send title "&9Kumogakure" with subtitle "&3Ahora perteneces a &9&nKumogakure" to {_user}
+			wait 2 seconds
+			teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+			message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+			send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+			set {Rango::%{_user}%} to "&7Gennin"
+		else:
+			if size of {Usuarios::Kumogakure::*} is less than {Cupos Kumogakure} + 1:
+				add {_user} to {Usuarios::%{_aldea}%::*}
+				set {Aldea::%{_user}%} to "&9Kumogakure"
+				set {Creando PJ::%{_user}%} to 5
+				send title "&9Kumogakure" with subtitle "&3Ahora perteneces a &9&nKumogakure" to {_user}
+				wait 2 seconds
+				teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+				message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+				send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+				set {Rango::%{_user}%} to "&7Gennin"
+			else:
+				if {Cupos Kumogakure} is equal to {Cupos Konohagakure}, {Cupos Iwagakure}, {Cupos Kirigakure} and {Cupos Sunagakure}:
+					add 5 to {Cupos Konohagakure}, {Cupos Kumogakure}, {Cupos Iwagakure}, {Cupos Kirigakure} and {Cupos Sunagakure}
+					add {_user} to {Usuarios::%{_aldea}%::*}
+					set {Aldea::%{_user}%} to "&9Kumogakure"
+					set {Creando PJ::%{_user}%} to 5
+					send title "&9Kumogakure" with subtitle "&3Ahora perteneces a &9&nKumogakure" to {_user}
+					wait 2 seconds
+					teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+					message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+					send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+					set {Rango::%{_user}%} to "&7Gennin"
+				else:
+					send title "&4Aldea Llena" with subtitle "&cLa aldea %{_aldea}% &cestá llena. Prueba otra." to {_user}
+	else if {_aldea} contains "Iwagakure":
+		if {Cupos Iwagakure} is not set:
+			set {Cupos Iwagakure} to 10
+		if {Usuarios::%{_aldea}%::*} is not set:
+			set {Usuarios::%{_aldea}%::*} to {_user}
+			set {Aldea::%{_user}%} to "&8Iwagakure"
+			set {Creando PJ::%{_user}%} to 5
+			send title "&8Iwagakure" with subtitle "&7Ahora perteneces a &8&nIwagakure" to {_user}
+			wait 2 seconds
+			teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+			message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+			send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+			set {Rango::%{_user}%} to "&7Gennin"
+		else:
+			if size of {Usuarios::Iwagakure::*} is less than {Cupos Iwagakure} + 1:
+				add {_user} to {Usuarios::%{_aldea}%::*}
+				set {Aldea::%{_user}%} to "&8Iwagakure"
+				set {Creando PJ::%{_user}%} to 5
+				send title "&8Iwagakure" with subtitle "&7Ahora perteneces a &8&nIwagakure" to {_user}
+				wait 2 seconds
+				teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+				message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+				send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+				set {Rango::%{_user}%} to "&7Gennin"
+			else:
+				if {Cupos Iwagakure} is equal to {Cupos Konohagakure}, {Cupos Kumogakure}, {Cupos Kirigakure} and {Cupos Sunagakure}:
+					add 5 to {Cupos Konohagakure}, {Cupos Kumogakure}, {Cupos Iwagakure}, {Cupos Kirigakure} and {Cupos Sunagakure}
+					add {_user} to {Usuarios::%{_aldea}%::*}
+					set {Aldea::%{_user}%} to "&8Iwagakure"
+					set {Creando PJ::%{_user}%} to 5
+					send title "&8Iwagakure" with subtitle "&7Ahora perteneces a &8&nIwagakure" to {_user}
+					wait 2 seconds
+					teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+					message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+					send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+					set {Rango::%{_user}%} to "&7Gennin"
+				else:
+					send title "&4Aldea Llena" with subtitle "&cLa aldea %{_aldea}% &cestá llena. Prueba otra." to {_user}
+	else if {_aldea} contains "Sunagakure":
+		if {Cupos Sunagakure} is not set:
+			set {Cupos Sunagakure} to 10
+		if {Usuarios::%{_aldea}%::*} is not set:
+			set {Usuarios::%{_aldea}%::*} to {_user}
+			set {Aldea::%{_user}%} to "&eSunagakure"
+			set {Creando PJ::%{_user}%} to 5
+			send title "&eSunagakure" with subtitle "&6Ahora perteneces a &e&nSunagakure" to {_user}
+			wait 2 seconds
+			teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+			message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+			send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+			set {Rango::%{_user}%} to "&7Gennin"
+		else:
+			if size of {Usuarios::Sunagakure::*} is less than {Cupos Sunagakure} + 1:
+				add {_user} to {Usuarios::%{_aldea}%::*}
+				set {Aldea::%{_user}%} to "&eSunagakure"
+				set {Creando PJ::%{_user}%} to 5
+				send title "&eSunagakure" with subtitle "&6Ahora perteneces a &e&nSunagakure" to {_user}
+				wait 2 seconds
+				teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+				message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+				send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+				set {Rango::%{_user}%} to "&7Gennin"
+			else:
+				if {Cupos Sunagakure} is equal to {Cupos Konohagakure}, {Cupos Kumogakure}, {Cupos Iwagakure} and {Cupos Iwagakure}:
+					add 5 to {Cupos Konohagakure}, {Cupos Kumogakure}, {Cupos Iwagakure}, {Cupos Kirigakure} and {Cupos Sunagakure}
+					add {_user} to {Usuarios::%{_aldea}%::*}
+					set {Aldea::%{_user}%} to "&eSunagakure"
+					set {Creando PJ::%{_user}%} to 5
+					send title "&eSunagakure" with subtitle "&6Ahora perteneces a &e&nSunagakure" to {_user}
+					wait 2 seconds
+					teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+					message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+					send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+					set {Rango::%{_user}%} to "&7Gennin"
+				else:
+					send title "&4Aldea Llena" with subtitle "&cLa aldea %{_aldea}% &cestá llena. Prueba otra." to {_user}
+	else if {_aldea} contains "Kirigakure":
+		if {Cupos Kirigakure} is not set:
+			set {Cupos Kirigakure} to 10
+		if {Usuarios::%{_aldea}%::*} is not set:
+			set {Usuarios::%{_aldea}%::*} to {_user}
+			set {Aldea::%{_user}%} to "&3Kirigakure"
+			set {Creando PJ::%{_user}%} to 5
+			send title "&3Kirigakure" with subtitle "&bAhora perteneces a &3&nKirigakure" to {_user}
+			wait 2 seconds
+			teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+			message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+			send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+			set {Rango::%{_user}%} to "&7Gennin"
+		else:
+			if size of {Usuarios::Kirigakure::*} is less than {Cupos Kirigakure} + 1:
+				add {_user} to {Usuarios::%{_aldea}%::*}
+				set {Aldea::%{_user}%} to "&3Kirigakure"
+				set {Creando PJ::%{_user}%} to 5
+				send title "&3Kirigakure" with subtitle "&bAhora perteneces a &3&nKirigakure" to {_user}
+				wait 2 seconds
+				teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+				message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+				send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+				set {Rango::%{_user}%} to "&7Gennin"
+			else:
+				if {Cupos Sunagakure} is equal to {Cupos Konohagakure}, {Cupos Kumogakure}, {Cupos Iwagakure} and {Cupos Iwagakure}:
+					add 5 to {Cupos Konohagakure}, {Cupos Kumogakure}, {Cupos Iwagakure}, {Cupos Kirigakure} and {Cupos Sunagakure}
+					add {_user} to {Usuarios::%{_aldea}%::*}
+					set {Aldea::%{_user}%} to "&3Kirigakure"
+					set {Creando PJ::%{_user}%} to 5
+					send title "&3Kirigakure" with subtitle "&bAhora perteneces a &3&nKirigakure" to {_user}
+					wait 2 seconds
+					teleport {_user} to location(-63.5, 5, -311.5, "otro_mundo" parsed as world, 127, 0)
+					message "&5Sistema &8► &dEscoge tu clan tocando el marco de portal del ender" to {_user}
+					send title "&eClan" with subtitle "&bEscoge tu clan tocando el marco de portal del ender" to {_user}
+					set {Rango::%{_user}%} to "&7Gennin"
+				else:
+					send title "&4Aldea Llena" with subtitle "&cLa aldea %{_aldea}% &cestá llena. Prueba otra." to {_user}
+
+function escogiendoClan(user: player, aldea: text):
+	if uncolored {_aldea} in lower case contains "konohagakure":
+		set {_clanes::*} to "&bHyuga", "&4Uchiha", "&2Senju", "&cUzumaki" and "&fKaguya"
+		set {_vidrios::*} to light blue stained glass pane, red stained glass pane, green stained glass pane, orange stained glass pane and white stained glass pane
+	
+	else if uncolored {_aldea} in lower case contains "kumogakure":
+		set {_clanes::*} to "&9Yotsuki", "&8Raisoku", "&cChinoike", "&cUzumaki" and "&fKaguya"
+		set {_vidrios::*} to blue stained glass pane, gray stained glass pane, yellow stained glass pane, orange stained glass pane and white stained glass pane
+	
+	else if uncolored {_aldea} in lower case contains "kirigakure":
+		set {_clanes::*} to "&3Hozuki", "&9Hoshigaki", "&bYuki", "&cUzumaki" and "&fKaguya"
+		set {_vidrios::*} to cyan stained glass pane, blue stained glass pane, light blue stained glass pane, orange stained glass pane and white stained glass pane
+	
+	else if uncolored {_aldea} in lower case contains "sunagakure":
+		set {_clanes::*} to "&aShirogane", "&eKazekage", "&bRyuuyi", "&cUzumaki" and "&fKaguya"
+		set {_vidrios::*} to lime stained glass pane, yellow stained glass pane, light blue stained glass pane, orange stained glass pane and white stained glass pane
+	
+	else if uncolored {_aldea} in lower case contains "iwagakure":
+		set {_clanes::*} to "&7Kinzoku", "&6Kamizuru", "&eBakuton", "&cUzumaki" and "&fKaguya"
+		set {_vidrios::*} to light gray stained glass pane, orange stained glass pane, yellow stained glass pane, orange stained glass pane and white stained glass pane
+	loop 20 times:
+		set {_numero random} to random integer between 1 and 5
+		set slot 13 of {_user}'s current inventory to {_vidrios::%{_numero random}%} named "&l%{_clanes::%{_numero random}%}%"
+		play sound "block.note.bell" to {_user}
+		wait 0.5 seconds
+	play sound "entity.player.levelup" to {_user}
+	set {_c} to -1
+	loop 13 times:
+		add 1 to {_c}
+		set slot {_c} of {_user}'s current inventory to yellow stained glass pane named "&0&l..."
+	set {_c} to 13
+	loop 13 times:
+		add 1 to {_c}
+		set slot {_c} of {_user}'s current inventory to yellow stained glass pane named "&0&l..."
+	delete {Escogiendo Clan::%{_user}%}
+	set {Clan::%{_user}%} to {_clanes::%{_numero random}%}
+	if {Clan::%{_user}%} contains "uzumaki" or "kaguya":
+		make console execute command "lp user %{_user}% parent set g_%uncolored {Clan::%{_user}%}%_%uncolored {Aldea::%{_user}%} in lower case%"
+	else:
+		make console execute command "lp user %{_user}% parent set g_%uncolored {Clan::%{_user}%}%"
+	wait 2 seconds
+	close {_user}'s inventory
+	send title {Clan::%{_user}%} with subtitle "&bAhora perteneces al clan %{Clan::%{_user}%}%" to {_user}
+	set {Creando PJ::%{_user}%} to 6
+	wait 2 seconds
+	teleport {_user} to location(-151.5, 5, -201.5, "otro_mundo" parsed as world, -270, 0)
+	message "&5Sistema &8► &dÚltimo paso... Por favor enlaza tu cuenta de Discord con Minecraft utilizando el comando /enlazar" to {_user}
+	send title "&9Discord" with subtitle "&bPor favor enlaza tu cuenta de Discord con MC con /enlazar" to {_user}
+
+command /enlazar:
+	trigger:
+		if {Creando PJ::%player%} is 6:
+			set {_a} to random integer between 100 and 999
+			set {_b} to random integer between 100 and 999
+			set {_c} to random integer between 100 and 999
+			set {Codigo Verificador::%player%} to "%{_a}%-%{_b}%-%{_c}%"
+			message "&8(&5&l!&8) > &dEl último paso ya está... Por favor copia el código de verificación e ingrésalo en discord con el comando n!enlazar <código>.%nl%&5Código: &d%{Codigo Verificador::%player%}%"
+
+discord command n!enlazar [<text>]:
+	trigger:
+		if {Cuenta Minecraft::%discord id of event-user%} is not set:
+			if arg 1 is set:
+				loop all players:
+					if {Codigo Verificador::%loop-player%} is arg 1:
+						set {_sies} to loop-player
+				if {_sies} is set:
+					delete {Codigo Verificador::%{_sies}%}
+					set {Cuenta Minecraft::%discord id of event-user%} to {_sies}
+					set {Cuenta Discord::%{_sies}%} to discord id of event-user
+					delete {Creando PJ::%{_sies}%}
+					reveal {_sies} to all players
+					teleport {_sies} to spawn of the world "Naruto_Revolution_Final"
+					send title "&9Discord" with subtitle "&bHas enlazado tu cuenta de Discord con la de Minecraft!" to {_sies}
+					set {Misiones Rango::%{_sies}%::E}, {Misiones Rango::%{_sies}%::D}, {Misiones Rango::%{_sies}%::C}, {Misiones Rango::%{_sies}%::B}, {Misiones Rango::%{_sies}%::A} and {Misiones Rango::%{_sies}%::S} to 0
+					set {Clases Gennin Completas::%{_sies}%}, {Clases Chunin Completas::%{_sies}%} to 0
+					set {Fuerza::%{_sies}%}, {Velocidad::%{_sies}%}, {Chakra::%{_sies}%}, {Resistencia::%{_sies}%} to 0
+					set {Paradero::%{_sies}%} to "&2Activo"
+					if {Aldea::%{_sies}%} contains "Konoha":
+						set {Pais de Origen::%{_sies}%} to "&4&lPaís del Fuego"
+					else if {Aldea::%{_sies}%} contains "Suna":
+						set {Pais de Origen::%{_sies}%} to "&b&lPaís del Viento"
+					else if {Aldea::%{_sies}%} contains "Iwa":
+						set {Pais de Origen::%{_sies}%} to "&6&lPaís de la Tierra"
+					else if {Aldea::%{_sies}%} contains "Kumo":
+						set {Pais de Origen::%{_sies}%} to "&e&lPaís del Rayo"
+					else if {Aldea::%{_sies}%} contains "Kiri":
+						set {Pais de Origen::%{_sies}%} to "&9&lPaís del Agua"
+					set {Bijuu::%{_sies}%} to "&8ninguno"
+					set {Estilo de Combate::%{_sies}%} to "&8ninguno"
+					set {Sennin::%{_sies}%} to "&8ninguno"
+					set {Espada de la Neblina::%{_sies}%} to "&8ninguno"
+					set {Graduado de Academia::%{_sies}%} to "No"
+
+					if {Reinicios::%{_sies}%} is not set:
+						set {Reinicios::%{_sies}%} to 3
+					create embed:
+						set title of the embed to "Cuenta enlazada"
+						set description of the embed to "Felicitaciones, <@%discord id of event-user%> has enlazado correctamente tu cuenta de Minecraft %{_sies}% con tu cuenta de Discord"
+						add inline field named "__**Aldea**__"  with the value uncolored {Aldea::%{_sies}%} to embed
+						add inline field named "__**Clan**__"  with the value uncolored {Clan::%{_sies}%} to embed
+						add inline field named "__**Nombre**__"  with the value uncolored {Nombre Ninja::%{_sies}%} to embed
+						add inline field named "__**Sexo**__"  with the value uncolored {Sexo::%{_sies}%} to embed
+						add inline field named "__**Rango**__"  with the value uncolored {Rango::%{_sies}%} to embed
+						set color of the embed to orange
+						set thumbnail of the embed to "%avatar of event-member%"
+						set footer of embed to footer with text "Enlazar Cuentas | Developed by Alexis.__l"
+					send last created embed to event-channel with "Naruto"
+					#set the discord nickname of event-member to "%uncolored {Nombre Ninja::%{_sies}%}% | %uncolored {Clan::%{_sies}%}%" with "Naruto"
+				else:
+					create embed:
+						set title of the embed to "Error"
+						set description of the embed to "No hay ninguna cuenta con ese código de verificación, intenta con uno válido."
+						set color of the embed to orange
+						set thumbnail of the embed to "%avatar of event-member%"
+						set footer of embed to footer with text "Enlazar Cuentas | Developed by Alexis.__l"
+					send last created embed to event-channel with "Naruto"
+			else:
+				create embed:
+					set title of the embed to "Error"
+					set description of the embed to "No hay ninguna cuenta con ese código de verificación, intenta con uno válido."
+					set color of the embed to orange
+					set thumbnail of the embed to "%avatar of event-member%"
+					set footer of embed to footer with text "Enlazar Cuentas | Developed by Alexis.__l"
+				send last created embed to event-channel with "Naruto"
+
+function reiniciarPersonaje(user: player, admin: boolean):
+	if {_admin} is true:
+		set {_aldea} to uncolored {Aldea::%{_user}%}
+		remove {_user} from {Usuarios::%{_aldea}%::*}
+		loop discord members of guild with id "713384275134775379":
+			if discord id of loop-member is "%{Cuenta Discord::%{_user}%}%":
+				set {_userID} to loop-member
+				stop this loop
+		set {_g} to guild with id "713384275134775379"
+		loop roles of {_userID}:
+			if "%loop-role%" doesn't contain "staff", "creador" or "equip":
+				{_g}.removeRoleFromMember({_userID}, loop-role).queue()
+		set {_discord} to {Cuenta Discord::%{_user}%}
+		delete {Cuenta Minecraft::%{_discord}%}
+		delete {Cuenta Discord::%{_user}%}
+		make console execute command "lp user %{_user}% parent set default"
+		make console execute command "cast forget %{_user}% *"
+		clear {_user}'s inventory
+		clear {_user}'s ender chest
+
+		delete {Clases Gennin Completas::%{_user}%}, {Graduado de Academia::%{_user}%} and {Clases Chunin Completas::%{_user}%}
+		delete {Nombre Ninja::%{_user}%}, {Clan::%{_user}%}, {Sexo::%{_user}%}, {Rango::%{_user}%}, {Aldea::%{_user}%}, {Pais de Origen::%{_user}%}, {Bijuu::%{_user}%}, {Estilo de Combate::%{_user}%}, {Sennin::%{_user}%}, {Espada de la Neblina::%{_user}%} and {Arma Legendaria::%{_user}%}
+		delete {Elementos Basicos::%{_user}%::*}
+		delete {Kekkei Genkais::%{_user}%::*}
+		delete {Dojutsus::%{_user}%::*}
+		delete {Jutsus::%{_user}%::*}
+		delete {Fecha Nacimiento::%{_user}%} and {Fecha Cumpleaños::%{_user}%}
+		delete {Misiones Rango::%{_user}%::E}, {Misiones Rango::%{_user}%::D}, {Misiones Rango::%{_user}%::C}, {Misiones Rango::%{_user}%::B}, {Misiones Rango::%{_user}%::A} and {Misiones Rango::%{_user}%::S}
+		delete {EXP::%{_user}%}, {EXP Requerida::%{_user}%}, {Nivel::%{_user}%}, {EXP Por Nivel::%{_user}%} and {Puntos de Atributo::%{_user}%}
+		delete {Fuerza::%{_user}%}, {Resistencia::%{_user}%}, {Chakra::%{_user}%} and {Velocidad::%{_user}%}
+	else:
+		if {Reinicios::%{_user}%} is more or equal to 1:
+			remove 1 from {Reinicios::%{_user}%}
+			set {_aldea} to uncolored {Aldea::%{_user}%}
+			remove {_user} from {Usuarios::%{_aldea}%::*}
+			loop discord members of guild with id "713384275134775379":
+				if discord id of loop-member is "%{Cuenta Discord::%{_user}%}%":
+					set {_userID} to loop-member
+					stop this loop
+			set {_g} to guild with id "713384275134775379"
+			loop roles of {_userID}:
+				if "%loop-role%" doesn't contain "staff", "creador" or "equip":
+					{_g}.removeRoleFromMember({_userID}, loop-role).queue()
+			set {_discord} to {Cuenta Discord::%{_user}%}
+			delete {Cuenta Minecraft::%{_discord}%}
+			delete {Cuenta Discord::%{_user}%}
+			make console execute command "lp user %{_user}% parent set default"
+			make console execute command "cast forget %{_user}% *"
+			clear {_user}'s inventory
+			clear {_user}'s ender chest
+
+			delete {Clases Gennin Completas::%{_user}%}, {Graduado de Academia::%{_user}%} and {Clases Chunin Completas::%{_user}%}
+			delete {Nombre Ninja::%{_user}%}, {Clan::%{_user}%}, {Sexo::%{_user}%}, {Rango::%{_user}%}, {Aldea::%{_user}%}, {Pais de Origen::%{_user}%}, {Bijuu::%{_user}%}, {Estilo de Combate::%{_user}%}, {Sennin::%{_user}%}, {Espada de la Neblina::%{_user}%} and {Arma Legendaria::%{_user}%}
+			delete {Elementos Basicos::%{_user}%::*}
+			delete {Kekkei Genkais::%{_user}%::*}
+			delete {Dojutsus::%{_user}%::*}
+			delete {Jutsus::%{_user}%::*}
+			delete {Fecha Nacimiento::%{_user}%} and {Fecha Cumpleaños::%{_user}%}
+			delete {Misiones Rango::%{_user}%::E}, {Misiones Rango::%{_user}%::D}, {Misiones Rango::%{_user}%::C}, {Misiones Rango::%{_user}%::B}, {Misiones Rango::%{_user}%::A} and {Misiones Rango::%{_user}%::S}
+			delete {EXP::%{_user}%}, {EXP Requerida::%{_user}%}, {Nivel::%{_user}%}, {EXP Por Nivel::%{_user}%} and {Puntos de Atributo::%{_user}%}
+			delete {Fuerza::%{_user}%}, {Resistencia::%{_user}%}, {Chakra::%{_user}%} and {Velocidad::%{_user}%}
