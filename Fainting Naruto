@@ -1,0 +1,138 @@
+import:
+	# Vanilla
+	org.bukkit.event.player.PlayerRespawnEvent
+	# Citizens
+	net.citizensnpcs.npc.CitizensNPCRegistry
+	net.citizensnpcs.api.CitizensAPI
+	# MagicSpells
+	com.nisovin.magicspells.events.ManaChangeEvent
+	com.nisovin.magicspells.events.SpellCastEvent
+	# CorpseAPI
+	org.golde.bukkit.corpsereborn.CorpseAPI.CorpseAPI
+	org.golde.bukkit.corpsereborn.Main
+	org.golde.bukkit.corpsereborn.Util
+	org.golde.bukkit.corpsereborn.dump.ReportError
+	org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseSpawnEvent
+	org.golde.bukkit.corpsereborn.CorpseAPI.events.CorpseClickEvent
+
+on CorpseSpawnEvent:
+	if event.fromCommand() is false:
+		event.setCancelled(true)
+
+on PlayerRespawnEvent:
+	event.setRespawnLocation({Locacion Ultima Muerte::%event.getPlayer()%})
+	set gamemode of event.getPlayer() to spectator
+	delete {Locacion Ultima Muerte::%event.getPlayer()%}
+
+on death of a player:
+	if CitizensAPI.getNPCRegistry().isNPC(victim) is false:
+		if {Deficiencia de Chakra::%victim%} is set:
+			delete {Deficiencia de Chakra::%victim%}
+		set {Locacion Ultima Muerte::%victim%} to location at victim
+		reanimarOMatar(victim, attacker, {Locacion Ultima Muerte::%victim%})
+
+function reanimarOMatar(p: player, k: entity, l: location):
+	force {_p} to respawn
+	set {Corpse::%{_p}%} to CorpseAPI.spawnCorpse({_p}, {_l})
+	set {_tiempo} to 0
+	while {_tiempo} is less than 10:
+		if {Revivio::%{_p}%} is true:
+			set {_tiempo} to 10
+			delete {Revivio::%{_p}%}
+			teleport {_p} to {_l}
+			set {_p}'s gamemode to survival
+			delete {Corpse::%{_p}%}
+			set {_paso algo} to true
+			apply slowness of tier 5 to {_p} for 5 seconds
+			apply nausea of tier 5 to {_p} for 5 seconds
+			apply weakness of tier 5 to {_p} for 5 seconds
+			set {Deficiencia de Chakra::%{_p}%} to true
+			set {_p}'s health to 5
+			set {_conteo} to 0
+			while {_conteo} is less than 6:
+				add 1 to {_conteo}
+				wait 1 second
+			if {Deficiencia de Chakra::%{_p}%} is set:
+				delete {Deficiencia de Chakra::%{_p}%}
+		else if {Lo Mataron::%{_p}%} is true:
+			set {_tiempo} to 10
+			delete {Lo Mataron::%{_p}%}
+			delete {Corpse::%{_p}%}
+			set {_p}'s gamemode to survival
+			set {_paso algo} to true
+			set {_aldea} to uncolored {Aldea::%{_p}%}
+			set {_distancia Hospital} to distance between {Hospital %{_aldea}%} and {_l}
+			set {_distancia Pueblo} to distance between {Pueblo 1 %{_aldea}%} and {_l} 
+			if {_distancia Hospital} is more than {_distancia Pueblo}:
+				teleport {_p} to {Pueblo 1 %{_aldea}%}
+			else:
+				teleport {_p} to {Hospital %{_aldea}%}
+			set {_list::player} to {_p}
+			set {_data::killer} to {_k}
+			set {_data::victim} to {_p}
+			set {_event} to a new custom event "sistema_desmayo_murio" with {_list::*} and using data {_data::*}
+			call event {_event}
+			stop
+		add 1 to {_tiempo}
+		send action bar "&c&lMorirás en... &e&l%10 - {_tiempo}%" to {_p}
+		wait 1 second
+	if {_paso algo} is not set:
+		CorpseAPI.removeCorpse({Corpse::%{_p}%})
+		delete {Lo Mataron::%{_p}%}
+		delete {Revivio::%{_p}%}
+		delete {Corpse::%{_p}%}
+		set {_p}'s gamemode to survival
+		set {_aldea} to uncolored {Aldea::%{_p}%}
+		set {_distancia Hospital} to distance between {Hospital %{_aldea}%} and {_l}
+		set {_distancia Pueblo} to distance between {Pueblo 1 %{_aldea}%} and {_l}
+		if {_distancia Hospital} is more than {_distancia Pueblo}:
+			teleport {_p} to {Pueblo 1 %{_aldea}%}
+		else:
+			teleport {_p} to {Hospital %{_aldea}%}
+		set {_list::player} to {_p}
+		set {_data::killer} to {_k}
+		set {_data::victim} to {_p}
+		set {_event} to a new custom event "sistema_desmayo_murio" with {_list::*} and using data {_data::*}
+		call event {_event}
+		stop
+
+on CorpseClickEvent:
+	event.setCancelled(true)
+	if {Revivio::%event.getCorpse().getCorpseName()%} or {Lo Mataron::%event.getCorpse().getCorpseName()%} is set:
+		stop
+	if "%event.getClicker()%" is not "%event.getCorpse().getCorpseName()%":
+		CorpseAPI.removeCorpse(event.getCorpse())
+		if "%event.getClickType()%" is "RIGHT_CLICK":
+			set {Revivio::%event.getCorpse().getCorpseName()%} to true
+			send action bar "&aHas reanimado a &e%event.getCorpse().getCorpseName()%" to event.getClicker()
+			send action bar "&e%event.getClicker()% &ate ha reanimado" to "%event.getCorpse().getCorpseName()%" parsed as player
+		else:
+			set {Lo Mataron::%event.getCorpse().getCorpseName()%} to true
+			send action bar "&cHas rematado a &e%event.getCorpse().getCorpseName()%" to event.getClicker()
+			send action bar "&e%event.getClicker()% &cte ha rematado" to "%event.getCorpse().getCorpseName()%" parsed as player
+
+on quit:
+	if {Corpse::%player%} is set:
+		CorpseAPI.removeCorpse({Corpse::%player%})
+		delete {Corpse::%player%}, {Revivio::%player%} and {Lo Mataron::%player%}
+		set player's gamemode to survival
+
+on SpellCastEvent:
+	if {Deficiencia de Chakra::%event.getCaster()%} is set:
+		event.setCancelled(true)
+
+custom event "sistema_desmayo_murio":
+	pattern: sistema desmayo murio alguien
+	event-values: players
+
+expression [event-]asesino:
+	usable in:
+		custom event "sistema_desmayo_murio"
+	get:
+		return event.getData("killer")
+
+expression [event-]victima:
+	usable in:
+		custom event "sistema_desmayo_murio"
+	get:
+		return event.getData("victim")
