@@ -1,0 +1,279 @@
+	com.nisovin.magicspells.MagicSpells
+	com.nisovin.magicspells.variables.Variable
+
+on first join:
+    textoBienvenidaCreadorPJ(player)
+
+on join:
+	if {pj creado %player%} is not set:
+		send title "&4¡Crea tu personaje!" with subtitle "&cHabla con Nero para crear tu personaje" to player
+
+command /definir-zona [<text>]:
+	trigger:
+		if arg is set:
+			set {locación %arg%} to location of player
+			message "definiste la zona %{locación %arg%}%"
+command /añadir-bloque-interactivo:
+	trigger:
+		if targeted block is set:
+			add targeted block to {portales interactuables creador de pj::*}
+			message "añadiste un portal"
+on npc right click:
+	if citizen is 473:
+		if {pj creado %player%} is not set:
+			set {reinicio en proceso %player%} to true
+			textoBienvenidaCreadorPJ(player)
+		else:
+			message "&cSecre Swallowtail &4» &cBienvenida pequeña alma..."
+
+command /me-da-paja:
+	trigger:
+		delete {pj creado %player%}
+
+function textoBienvenidaCreadorPJ(p: player):
+	set {pj creado %{_p}%} to true
+	teleport {_p} to {nada3}
+	wait 3 seconds
+	send "&7" to {_p}
+	send "&cSecre Swallowtail &4» &cVaya..." to {_p}
+	send "&7" to {_p}
+	wait 3 seconds
+	send "&cSecre Swallowtail &4» &cUna alma perdida del mundo espiritual acaba de cruzar al mundo de los mortales..." to {_p}
+	send "&7" to {_p}
+	wait 3 seconds
+	send "&cSecre Swallowtail &4» &cUn placer pequeña alma, mi nombre es Secre Swallowtail pero puedes llarme Nero, yo seré la encargada de guiarte por este mundo." to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	send "&cSecre Swallowtail &4» &cAsí que empecemos nuestro recorrido por este mundo de una vez por todas, te espera un mundo lleno de un sin fin de aventuras." to {_p}
+	send "&7" to {_p}
+	wait 3 seconds
+	send "&cSecre Swallowtail &4» &cPero recuerda... tu eres el que diriges tu hilo del destino así que ten cuidado..." to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	primeraFaseDescubrirReino({_p})
+
+function primeraFaseDescubrirReino(p: player):
+	teleport {_p} to {DescubrirReino3}
+	send "&7" to {_p}
+	send "&cSecre Swallowtail &4» &c Muy bien... verás, en este mundo existen 3 grandes reinos: %nl% &8- &2Reino del Trebol %nl% &8- &9Reino del Diamantes %nl% &8- &8Reino de la Pica %nl% &8- &cReino del Corazón" to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	send "&cSecre Swallowtail &4» &cCada uno tiene sus diferencias políticas, la verdad no estoy enterada de como están las cosas por allá abajo desde hace un buen tiempo, así que ten cuidado dónde te metes." to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	send "&cSecre Swallowtail &4» &cAhora procederemos a identificar al reino al cual pertences tú pequeña alma, pon tus manos sobre el altar que tienes en frente y averígualo." to {_p}
+	send "&7" to {_p}
+	set {descubriendo reino %{_p}%} to true
+
+on right click:
+	if clicked block is set:
+		if clicked block is end portal frame:
+			if {portales interactuables creador de pj::*} contains clicked block:
+				if {descubriendo reino %player%} is true:
+					delete {descubriendo reino %player%}
+					set {_reinos::*} to "&2Reino del Trebol", "&9Reino del Diamante" and "&cReino del Corazón"
+					set {Reino %player%} to random object out of {_reinos::*}
+					send title "&l%{Reino %player%}%" with subtitle "&f¡Perteneces al %{Reino %player%}%&f!" to player
+					if {Reino %player%} is "&2Reino del Trebol":
+						make console execute command "lp user %player% parent set ciudadano-trebol"
+					if {Reino %player%} is "&9Reino del Diamante":
+						make console execute command "lp user %player% parent set ciudadano-diamante"
+					if {Reino %player%} is "&8Reino de la Pica":
+						make console execute command "lp user %player% parent set ciudadano-pica"
+					if {Reino %player%} is "&cReino del Corazón":
+						make console execute command "lp user %player% parent set ciudadano-corazon"
+					wait 4 seconds
+					segundaFaseDescubrirJerarquía(player)
+					stop
+				if {descubriendo clase %player%} is true:
+					delete {descubriendo clase %player%}
+					set {_c} to random integer between 1 and 100
+					if {_c} is 1:
+						set {Clase %player%} to "&eNoble"
+					else:
+						set {Clase %player%} to "&7Plebeyo"
+					send title "&l%{Clase %player%}%" with subtitle "&f¡Perteneces a la clase %{Clase %player%}%&f!" to player
+					wait 4 seconds
+					terceraFaseDescubrirMana(player)
+					stop
+				if {descubriendo magia %player%} is true:
+					if {Reino %player%} is "&2Reino del Trebol":
+						delete {descubriendo magia %player%}
+						set {_magias::*} to "Anti Magia", "Pseudo Ofensiva", "Agua", "Fuego", "Viento", "Acero", "Rayo", "Tierra", "Espacial Defensiva", "Espacial Ofensiva", "Fuego", "Mercurio", "Arbol del Mundo", and "Plantas"
+						set {_magia} to random object out of {_magias::*}
+						add {_magia} to {Magia %player%::*}
+						send title "&c&l%{Magia %player%::*}%" with subtitle "&f¡Posees la magia de &c%{Magia %player%::*}%&f!"
+						wait 4 seconds
+						set {_magia} to {Magia %player%::1}
+						if {_magia} is "Anti Magia":
+							make console execute command "ms cast as %player% ManaAntimagia"
+						quintaFaseTextoFinal(player)
+					if {Reino %player%} is "&9Reino del Diamante":
+						delete {descubriendo magia %player%}
+						set {_magias::*} to "Anti Magia", "Pseudo Ofensiva", "Agua", "Fuego", "Viento", "Acero", "Rayo", "Tierra", "Espacial Defensiva", "Espacial Ofensiva", "Hielo", "Moco", and "Humo Negro"
+						set {_magia} to random object out of {_magias::*}
+						add {_magia} to {Magia %player%::*}
+						send title "&c&l%{Magia %player%::*}%" with subtitle "&f¡Posees la magia de &c%{Magia %player%::*}%&f!"
+						wait 4 seconds
+						set {_magia} to {Magia %player%::1}
+						if {_magia} is "Anti Magia":
+							make console execute command "ms cast as %player% ManaAntimagia"
+						quintaFaseTextoFinal(player)
+					if {Reino %player%} is "&8Reino de la Pica":
+						delete {descubriendo magia %player%}
+						set {_magias::*} to "Anti Magia", "Pseudo Ofensiva", "Agua", "Fuego", "Viento", "Acero", "Rayo", "Tierra", "Espacial Defensiva", "Espacial Ofensiva", "Plantas", "Hilos", "Cenizas", "Bronce" and "Hielo"
+						set {_magia} to random object out of {_magias::*}
+						add {_magia} to {Magia %player%::*}
+						send title "&c&l%{Magia %player%::*}%" with subtitle "&f¡Posees la magia de &c%{Magia %player%::*}%&f!"
+						wait 4 seconds
+						if {_magia} is "Anti Magia":
+							make console execute command "ms cast as %player% ManaAntimagia"
+						quintaFaseTextoFinal(player)
+					if {Reino %player%} is "&cReino del Corazón":
+						delete {descubriendo magia %player%}
+						set {_magias::*} to "Anti Magia", "Pseudo Ofensiva", "Agua", "Fuego", "Viento", "Acero", "Rayo", "Tierra", "Espacial Defensiva", "Espacial Ofensiva", "Magma", "Espinas" and "Rayo Verdadero"
+						set {_magia} to random object out of {_magias::*}
+						add {_magia} to {Magia %player%::*}
+						send title "&c&l%{Magia %player%::*}%" with subtitle "&f¡Posees la magia de &c%{Magia %player%::*}%&f!"
+						wait 4 seconds
+						if {_magia} is "Anti Magia":
+							make console execute command "ms cast as %player% ManaAntimagia"
+						quintaFaseTextoFinal(player)
+				if {descubriendo mana %player%} is true:
+					delete {descubriendo mana %player%}
+					set {_c} to random integer between 1 and 100
+					if {Clase %player%} is "&eNoble":
+						if {_c} is less or equal to 5:
+							MagicSpells.getVariableManager().set("ManaIncS", player.getName(), 100)
+							set {_mana} to MagicSpells.getVariableManager().getValue("ManaIncS", player)
+							MagicSpells.getVariableManager().set("ManaMax", player.getName(), 100+{_mana})
+							send title "&bManá Tier 1" with subtitle "&f¡Posees &b+100 &fde maná!" to player
+							wait 4 seconds
+							cuartaFasaDescubrirMagia(player)
+							stop
+						if {_c} is less or equal to 25:
+							MagicSpells.getVariableManager().set("ManaIncS", player.getName(), 75)
+							set {_mana} to MagicSpells.getVariableManager().getValue("ManaIncS", player)
+							MagicSpells.getVariableManager().set("ManaMax", player.getName(), 100+{_mana})
+							send title "&bManá Tier 2" with subtitle "&f¡Posees &b+75 &fde maná!" to player
+							wait 4 seconds
+							cuartaFasaDescubrirMagia(player)
+							stop
+						if {_c} is less or equal to 35:
+							MagicSpells.getVariableManager().set("ManaIncS", player.getName(), 50)
+							set {_mana} to MagicSpells.getVariableManager().getValue("ManaIncS", player)
+							MagicSpells.getVariableManager().set("ManaMax", player.getName(), 100+{_mana})
+							send title "&bManá Tier 3" with subtitle "&f¡Posees &b+50 &fde maná!" to player
+							wait 4 seconds
+							cuartaFasaDescubrirMagia(player)
+							stop
+						if {_c} is less or equal to 40:
+							MagicSpells.getVariableManager().set("ManaIncS", player.getName(), 30)
+							set {_mana} to MagicSpells.getVariableManager().getValue("ManaIncS", player)
+							MagicSpells.getVariableManager().set("ManaMax", player.getName(), 100+{_mana})
+							send title "&bManá Tier 4" with subtitle "&f¡Posees &b+30 &fde maná!" to player
+							wait 4 seconds
+							cuartaFasaDescubrirMagia(player)
+							stop
+						if {_c} is less or equal to 100:
+							MagicSpells.getVariableManager().set("ManaIncS", player.getName(), 15)
+							set {_mana} to MagicSpells.getVariableManager().getValue("ManaIncS", player)
+							MagicSpells.getVariableManager().set("ManaMax", player.getName(), 100+{_mana})
+							send title "&bManá Tier 5" with subtitle "&f¡Posees &b+15 &fde maná!" to player
+							wait 4 seconds
+							cuartaFasaDescubrirMagia(player)
+							stop
+					if {Clase %player%} is "&7Plebeyo":
+						if {_c} is less or equal to 5:
+							MagicSpells.getVariableManager().set("ManaIncS", player.getName(), 50)
+							set {_mana} to MagicSpells.getVariableManager().getValue("ManaIncS", player)
+							MagicSpells.getVariableManager().set("ManaMax", player.getName(), 100+{_mana})
+							send title "&bManá Tier 1" with subtitle "&f¡Posees &b+50 &fde maná!" to player
+							wait 4 seconds
+							cuartaFasaDescubrirMagia(player)
+							stop
+						if {_c} is less or equal to 15:
+							MagicSpells.getVariableManager().set("ManaIncS", player.getName(), 30)
+							set {_mana} to MagicSpells.getVariableManager().getValue("ManaIncS", player)
+							MagicSpells.getVariableManager().set("ManaMax", player.getName(), 100+{_mana})
+							send title "&bManá Tier 2" with subtitle "&f¡Posees &b+30 &fde maná!" to player
+							wait 4 seconds
+							cuartaFasaDescubrirMagia(player)
+							stop
+						if {_c} is less or equal to 25:
+							MagicSpells.getVariableManager().set("ManaIncS", player.getName(), 15)
+							set {_mana} to MagicSpells.getVariableManager().getValue("ManaIncS", player)
+							MagicSpells.getVariableManager().set("ManaMax", player.getName(), 100+{_mana})
+							send title "&bManá Tier 3" with subtitle "&f¡Posees &b+15 &fde maná!" to player
+							wait 4 seconds
+							cuartaFasaDescubrirMagia(player)
+							stop
+						if {_c} is less or equal to 100:
+							MagicSpells.getVariableManager().set("ManaIncS", player.getName(), 0)
+							set {_mana} to MagicSpells.getVariableManager().getValue("ManaIncS", player)
+							MagicSpells.getVariableManager().set("ManaMax", player.getName(), 100+{_mana})
+							send title "&bManá Tier 4" with subtitle "&f¡Posees &b+0 &fde maná!" to player
+							wait 4 seconds
+							cuartaFasaDescubrirMagia(player)
+							stop
+function segundaFaseDescubrirJerarquía(p: player):
+	teleport {_p} to {DescubrirJerarquía2}
+	send "&7" to {_p}
+	send "&cSecre Swallowtail &4» &cAsí que pertences al %{Reino %{_p}%}%&c..." to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	send "&cSecre Swallowtail &4» &cMuy bien, por mucho que no me guste en este mundo existen clases sociales, las dos mas relevantes en este mundo son la clase noble y la clase de los plebeyos." to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	send "&cSecre Swallowtail &4» &cAhora deberemos descubrir nuevamente por medio del altar a que clase pertences, así que bien, ¿qué esperas?." to {_p}
+	send "&7" to {_p}
+	set {descubriendo clase %{_p}%} to true
+
+function terceraFaseDescubrirMana(p: player):
+	teleport {_p} to {DescubrirManá2}
+	send "&7" to {_p}
+	if {Clase %{_p}%} is "&eNoble":
+		send "&cSecre Swallowtail &4» &cAsí que perteneces a la nobleza... espero que tu corazón no se corrompa ser de luz, no olvides de dónde vienes." to {_p}
+	if {Clase %{_p}%} is "&7Plebeyo":
+		send "&cSecre Swallowtail &4» &cAsí que pertences a los plebeyos... no dejes que eso interfiera en tu camino, sigue adelante!." to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	send "&cSecre Swallowtail &4» &cBien... supongo que debemos continuar nuestro camino, ahora realmente llegamos a la parte que mas me gusta de todo esto, descubriremos cuanto maná posees en tu cuerpo linda alma, asi que no sé que esperas, ¡ve al altar!" to {_p}
+	send "&7" to {_p}
+	set {descubriendo mana %{_p}%} to true
+
+function cuartaFasaDescubrirMagia(p: player):
+	teleport {_p} to {DescubrirMagia2}
+	send "&7" to {_p}
+	send "&cSecre Swallowtail &4» &cMuy bien... una vez ya tenemos la cantidad de flujo de maná que tienes en tu cuerpo, podemos pasar a lo que realmente de distinguirá en este mundo, tu tipo de magia." to {_p}
+	wait 2 seconds
+	send "&cSecre Swallowtail &4» &cYa sabes que hacer." to {_p}
+	send "&7" to {_p}
+	set {descubriendo magia %{_p}%} to true
+
+function quintaFaseTextoFinal(p: player):
+	send "&7" to {_p}
+	send "&cSecre Swallowtail &4» &cSi que posees una magia muy peculiar pequeña alma..." to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	send "&cSecre Swallowtail &4» &cEspero mucho de tí, lograste que hayara gracia en tí." to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	send "&cSecre Swallowtail &4» &cLamentablemente no nos queda mucho tiempo, así que supongo que nos veremos después." to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	send "&cSecre Swallowtail &4» &c¡Nos vemos pequeña alma!" to {_p}
+	send "&7" to {_p}
+	wait 4 seconds
+	send "&e(...Mi nombres es %{_p}%&e...)" to {_p}
+	teleport {_p} to {Hospital::%{Reino %{_p}%}%}
+	set {pj creado %{_p}%} to true
+	delete {reinicio en proceso %{_p}%}
+
+command /prueba-magia:
+	trigger:
+		set {_magias::*} to "Agua", "Viento", "Acero", "Rayo", "Tierra", "Espacial Defensiva", "Fuego", "Mercurio", "Arbol del Mundo" and "Plantas"
+		set {_magia} to random object out of {_magia::*}
+		add {_magia} to {Magia %player%::*}
+		send title "&c&l%{Magia %player%::*}%" with subtitle "&f¡Posees la magia de &c%{Magia %player%::*}%&f!"
+		set {_magia} to {Magia %player%::1}
