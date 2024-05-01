@@ -1,0 +1,20 @@
+command /puntos-hechizos [<text>] [<player>] [<integer>]:
+	permission: staff.dar.puntos.hechizos
+	trigger:
+		if arg-1 and arg-2 is set:
+			set {_p} to arg-2
+			set {_c} to arg-3
+			if arg-1 is "añadir":
+				add {_c} to {spell points %{_p}%}
+				send "&5&l(&dSTAFF&5&l) &dLe añadiste &5%{_c}% &dpuntos de aprendizaje a &5%{_p}%&d." to player
+				send "&5[&d!&5] &dEl STAFF &5%player% &dte añadió &5%{_c}%&d puntos de hechizo." to {_p}
+			else if arg-1 is "quitar":
+				remove {_c} from {spell points %{_p}%}
+				send "&5&l(&dSTAFF&5&l) &dLe quitaste &5%{_c}% &dpuntos de aprendizaje a &5%{_p}%&d." to player
+				send "&5[&d!&5] &dEl STAFF &5%player% &dte quitó &5%{_c}%&d puntos de hechizo." to {_p}
+			else if arg-1 is "ver":
+				if {spell points %{_p}%} is not set:
+					set {spell points %{_p}%} to 0
+				send "&5&l(&dSTAFF&5&l) &dPuntos de Aprendizaje de %{_p}%&5: &d%{spell points %{_p}%}%"
+		else:
+			send "&5&l(&dSTAFF&5&l) &dUsa el comando de manera correcta&5: &d/puntos-hechizos (añadir/quitar/ver) (usuario) (cantidad)."
