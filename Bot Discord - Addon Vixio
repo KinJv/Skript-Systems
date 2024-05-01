@@ -1,0 +1,688 @@
+on skript load:
+	create vixio bot:
+		enable the guild members gateway intent for bot
+		enable the guild bans gateway intent for bot
+		enable the guild emojis gateway intent for bot
+		enable the guild invites gateway intent for bot
+		enable the guild voice states gateway intent for bot
+		enable the guild presences gateway intent for bot
+		enable the guild messages gateway intent for bot
+		enable the guild message reactions gateway intent for bot
+		enable the direct messages gateway intent for bot
+		enable the direct message reactions intent for bot
+		enable the direct message typing intent for bot
+		login to "NzE0MTQ2NzEzOTA4MDE5MzAx.Xsqa9A.ffGM6unvCCJoH4Qhg7DqrsPE1d0" with the name "Naruto"
+		set status of "Naruto" to idle
+
+every 10 seconds:
+	set {_Actividades Bot::*} to "Oyendo historias de Shinobis", "Supervisando Misiones" and "Leyendo tarjetas de presentación."
+	set {_Actividad} to random object out of {_Actividades Bot::*}
+	set {_Chance} to random integer between 1 and 3
+	if {_Chance} is 1:
+		mark "Naruto" as playing to {_Actividad}
+	if {_Chance} is 2:
+		mark "Naruto" as listening to {_Actividad}
+	if {_Chance} is 3:
+		mark "Naruto" as watching to {_Actividad}
+
+#! Bienvenidas y Salidas
+
+on member join guild seen by "Naruto":
+	if discord id of event-guild is "713384275134775379":
+		create embed:
+			set title of the embed to "¡Bienvenido al Mundo Ninja!"
+			set description of the embed to "<@%discord id of event-user%>, Este servidor está bajo desarrollo, te invitamos a quedarte y mantenerte informado sobre cada avance en la categoria de Información.%nl%Canales en los cuales se publicarán cosas de mucha relevancia:%nl%**·** <##714163158327230496>%nl%**·** <##714163104388481045>%nl%**·** <##714162897126686752>.%nl%%nl%Si aún no sabes de que trata este Servidor te recomendamos ir a los siguientes canales:%nl%· <##714163038659280936>%nl%· <##714182095760654476>"
+			set thumbnail of the embed to "%avatar of event-member%"
+			set image of the embed to "https://steamuserimages-a.akamaihd.net/ugc/307738670235917221/6E7DB5BB301856D232C2528DA7F3C12908C75B4E/"
+			set footer of embed to footer with text "Naruto Revolution | Developed by Alexis.__l"
+		send last created embed to channel with id "714167575873060934" in event-guild with "Naruto"
+		create embed:
+			set title of the embed to "¡Bienvenido al Mundo Ninja!"
+			set description of the embed to "<@%discord id of event-user%>, Este servidor está bajo desarrollo, te invitamos a quedarte y mantenerte informado sobre cada avance en la categoria de Información.%nl%Canales en los cuales se publicarán cosas de mucha relevancia:%nl%**·** <##714163158327230496>%nl%**·** <##714163104388481045>%nl%**·** <##714162897126686752>.%nl%%nl%Si aún no sabes de que trata este Servidor te recomendamos ir a los siguientes canales:%nl%· <##714163038659280936>%nl%· <##714182095760654476>"
+			set thumbnail of the embed to "%avatar of event-member%"
+			set image of the embed to "https://steamuserimages-a.akamaihd.net/ugc/307738670235917221/6E7DB5BB301856D232C2528DA7F3C12908C75B4E/"
+			set footer of embed to footer with text "Naruto Revolution | Developed by Alexis.__l"
+		send last created embed to event-member with "Naruto"
+		add role with id "714171653914886245" to roles of event-member
+
+on member leave guild seen by "Naruto":
+	if discord id of event-guild is "713384275134775379":
+		create embed:
+			set title of the embed to "¡Un Ninja ha caído en combate!"
+			set description of the embed to "<@%discord id of event-user%>, lamentamos que te hayas ido. En caso de que deseas volver el Link de invitación al servidor de Discord será enviado a tu MD."
+			set color of the embed to color from rgb 0, 0 and 0
+			set thumbnail of the embed to "%avatar of event-member%"
+			set image of the embed to "https://thumbs.gfycat.com/BountifulPessimisticIndigobunting-small.gif"
+			set footer of embed to footer with text "Naruto Revolution | Developed by Alexis.__l"
+		send last created embed to channel with id "714167787467309177" in event-guild with "Naruto"
+		create embed:
+			set title of the embed to "¡Un Ninja ha caído en combate!"
+			set description of the embed to "<@%discord id of event-user%>, lamentamos que te hayas ido. En caso de que deseas volver este es el [link](https://discord.gg/9pDezep) de nuestro servidor de Discord. ¡Te estaremos esperando!"
+			set color of the embed to color from rgb 0, 0 and 0
+			set thumbnail of the embed to "%avatar of event-member%"
+			set image of the embed to "https://thumbs.gfycat.com/BountifulPessimisticIndigobunting-small.gif"
+			set footer of embed to footer with text "Naruto Revolution | Developed by Alexis.__l"
+		send last created embed to user with id discord id of event-member with "Naruto"
+
+#! Lore
+
+discord command n!ebuilderedit [<integer>] [<channel>]:
+	bots: Naruto
+	trigger:
+		if arg 1 is not set:
+			send "Por favor menciona la ID del mensaje" to event-channel with event-bot
+			stop
+		set {Embed Builder::%discord id of event-user%::*} to arg 1, discord id of event-channel, arg 2 and "editando"
+		create embed:
+			set the author info of the embed to author named "Embed Builder" with no url and icon "%avatar of user with id ""714146713908019301""%"
+			set title of the embed to "Creando Embed"
+			set description of the embed to "Has comenzado con la construcción de un mensaje Embed en el canal %event-channel%, que va a editar el mensaje con ID %arg 1%"
+			add split field named "¿Añadir fields?" with value "``AddField:<Nombre Field>|<Valor Field>``" to embed
+			add split field named "¿Añadir Split fields?" with value "``AddSField:<Nombre Field>|<Valor Field>``" to embed
+			add split field named "¿Añadir Blank Fields?" with value "``AddBField``" to embed
+			add split field named "¿Añadir Imagen?" with value "``AddIMG:<link imagen>``" to embed
+			add split field named "¿Añadir Thumbnail?" with value "``AddThumb:<link imagen>``" to embed
+			add split field named "¿Añadir Título?" with value "``AddTitle:<Titulo>|[URL EMBED]``" to embed
+			add split field named "¿Añadir Descripción?" with value "``AddDesc:<Descripción>``" to embed
+			add field named "¿Ver embed?" with value "``?``" to embed
+			add split field named "¿Cancelar Embed?" with value "``Cancel``" to embed
+			add split field named "¿Enviar Embed?" with value "``Confirm``" to embed
+			set footer of embed to footer with text "Naruto | Developed by Alexis.__l"
+		send last created embed to event-channel with "Naruto"
+
+discord command n!ebuilder [<channel>]:
+	bots: Naruto
+	trigger:
+		if arg 1 is not set:
+			send "Por favor menciona el canal" to event-channel with event-bot
+			stop
+		set {Embed Builder::%discord id of event-user%::*} to arg 1 and discord id of event-channel
+		create embed:
+			set the author info of the embed to author named "Embed Builder" with no url and icon "%avatar of user with id ""714146713908019301""%"
+			set title of the embed to "Creando Embed"
+			set description of the embed to "Has comenzado con la construcción de un mensaje Embed en el canal %event-channel%, que va dirigido al canal %arg 1%"
+			add split field named "¿Añadir fields?" with value "``AddField:<Nombre Field>|<Valor Field>``" to embed
+			add split field named "¿Añadir Split fields?" with value "``AddSField:<Nombre Field>|<Valor Field>``" to embed
+			add split field named "¿Añadir Blank Fields?" with value "``AddBField``" to embed
+			add split field named "¿Añadir Imagen?" with value "``AddIMG:<link imagen>``" to embed
+			add split field named "¿Añadir Thumbnail?" with value "``AddThumb:<link imagen>``" to embed
+			add split field named "¿Añadir Título?" with value "``AddTitle:<Titulo>|[URL EMBED]``" to embed
+			add split field named "¿Añadir Descripción?" with value "``AddDesc:<Descripción>``" to embed
+			add field named "¿Ver embed?" with value "``?``" to embed
+			add split field named "¿Cancelar Embed?" with value "``Cancel``" to embed
+			add split field named "¿Enviar Embed?" with value "``Confirm``" to embed
+			set footer of embed to footer with text "Naruto | Developed by Alexis.__l"
+		send last created embed to event-channel with "Naruto"
+
+on server message received by "Naruto":
+	if {Embed Builder::%discord id of event-user%::*} is set:
+		if discord id of event-channel is {Embed Builder::%discord id of event-user%::2}:
+			if event-string in lower case is "cancel":
+				delete {Embed Builder::%discord id of event-user%::*}
+				delete {Embed Builder - Fields::%discord id of event-user%::*}
+				delete {Embed Builder - Fields Values::%discord id of event-user%::*}
+				delete {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+				delete {Embed Builder - Imagen::%discord id of event-user%}
+				delete {Embed Builder - Thumbnail::%discord id of event-user%}
+				delete {Embed Builder - Titulo::%discord id of event-user%::*}
+				delete {Embed Builder - Descripcion::%discord id of event-user%}
+				send "Has cancelado la construcción del Embed" to event-channel with event-bot
+			else if event-string in lower case is "?":
+				create embed:
+					set the author info of the embed to author named "Embed Builder - Viendo" with no url and icon "%avatar of user with id ""714146713908019301""%"
+					if {Embed Builder - Titulo::%discord id of event-user%::1} is set:
+						if {Embed Builder - Titulo::%discord id of event-user%::2} is set:
+							set title of the embed to title with text {Embed Builder - Titulo::%discord id of event-user%::1} and url {Embed Builder - Titulo::%discord id of event-user%::2}
+						else:
+							set title of the embed to {Embed Builder - Titulo::%discord id of event-user%::1}
+					if {Embed Builder - Descripcion::%discord id of event-user%} is set:
+						set description of the embed to {Embed Builder - Descripcion::%discord id of event-user%}
+					if {Embed Builder - Fields::%discord id of event-user%::*} is set:
+						set {_c} to 0
+						loop {Embed Builder - Fields::%discord id of event-user%::*}:
+							add 1 to {_c}
+							if {Embed Builder - Tipo de Field::%discord id of event-user%::%{_c}%} is "Normal":
+								if {Embed Builder - Fields Values::%discord id of event-user%::%{_c}%} is not "Vacio":
+									add field named loop-value with value {Embed Builder - Fields Values::%discord id of event-user%::%{_c}%} to embed
+								else:
+									add field named loop-value to embed
+							else if {Embed Builder - Tipo de Field::%discord id of event-user%::%{_c}%} is "Split":
+								if {Embed Builder - Fields Values::%discord id of event-user%::%{_c}%} is not "Vacio":
+									add split field named loop-value with value {Embed Builder - Fields Values::%discord id of event-user%::%{_c}%} to embed
+								else:
+									add split field named loop-value to embed
+							else if {Embed Builder - Tipo de Field::%discord id of event-user%::%{_c}%} is "VacioSplit":
+								add split field to embed
+							else:
+								add field to embed
+					if {Embed Builder - Thumbnail::%discord id of event-user%} is set:
+						set thumbnail of the embed to {Embed Builder - Thumbnail::%discord id of event-user%}
+					if {Embed Builder - Imagen::%discord id of event-user%} is set:
+						set image of the embed to {Embed Builder - Imagen::%discord id of event-user%}
+					set footer of embed to footer with text "Naruto | Developed by Alexis.__l"
+				send last created embed to event-channel with event-bot
+			else if event-string in lower case is "confirm":
+				create embed:
+					set the author info of the embed to author named "Naruto Embed Builder" with no url and icon "%avatar of user with id ""714146713908019301""%"
+					if {Embed Builder - Titulo::%discord id of event-user%::1} is set:
+						if {Embed Builder - Titulo::%discord id of event-user%::2} is set:
+							set title of the embed to title with text {Embed Builder - Titulo::%discord id of event-user%::1} and url {Embed Builder - Titulo::%discord id of event-user%::2}
+						else:
+							set title of the embed to {Embed Builder - Titulo::%discord id of event-user%::1}
+					if {Embed Builder - Descripcion::%discord id of event-user%} is set:
+						set description of the embed to {Embed Builder - Descripcion::%discord id of event-user%}
+					if {Embed Builder - Fields::%discord id of event-user%::*} is set:
+						set {_c} to 0
+						loop {Embed Builder - Fields::%discord id of event-user%::*}:
+							add 1 to {_c}
+							if {Embed Builder - Tipo de Field::%discord id of event-user%::%{_c}%} is "Normal":
+								if {Embed Builder - Fields Values::%discord id of event-user%::%{_c}%} is not "Vacio":
+									add field named loop-value with value {Embed Builder - Fields Values::%discord id of event-user%::%{_c}%} to embed
+								else:
+									add field named loop-value to embed
+							else if {Embed Builder - Tipo de Field::%discord id of event-user%::%{_c}%} is "Split":
+								if {Embed Builder - Fields Values::%discord id of event-user%::%{_c}%} is not "Vacio":
+									add split field named loop-value with value {Embed Builder - Fields Values::%discord id of event-user%::%{_c}%} to embed
+								else:
+									add split field named loop-value to embed
+							else if {Embed Builder - Tipo de Field::%discord id of event-user%::%{_c}%} is "VacioSplit":
+								add split field to embed
+							else:
+								add field to embed
+					if {Embed Builder - Thumbnail::%discord id of event-user%} is set:
+						set thumbnail of the embed to {Embed Builder - Thumbnail::%discord id of event-user%}
+					if {Embed Builder - Imagen::%discord id of event-user%} is set:
+						set image of the embed to {Embed Builder - Imagen::%discord id of event-user%}
+					set footer of embed to footer with text "Naruto | Developed by Alexis.__l"
+				if size of {Embed Builder::%discord id of event-user%::*} is 2:
+					send last created embed to {Embed Builder::%discord id of event-user%::1} with event-bot
+					send "Has enviado correctamente el Embed al canal seleccionado" to event-channel with event-bot
+				else:
+					retrieve message with id "%{Embed Builder::%discord id of event-user%::1}%" in {Embed Builder::%discord id of event-user%::3}
+					edit last retrieved message to show last created embed
+					send "Has editado correctamente el mensaje con ID %{Embed Builder::%discord id of event-user%::1}% del canal %{Embed Builder::%discord id of event-user%::3}%" to event-channel with event-bot
+				delete {Embed Builder::%discord id of event-user%::*}
+				delete {Embed Builder - Fields::%discord id of event-user%::*}
+				delete {Embed Builder - Fields Values::%discord id of event-user%::*}
+				delete {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+				delete {Embed Builder - Imagen::%discord id of event-user%}
+				delete {Embed Builder - Thumbnail::%discord id of event-user%}
+				delete {Embed Builder - Titulo::%discord id of event-user%::*}
+				delete {Embed Builder - Descripcion::%discord id of event-user%}
+			else if event-string in lower case starts with "addfield":
+				if event-string in lower case is "addfield":
+					add "Vacio" to {Embed Builder - Fields::%discord id of event-user%::*}
+					add "Vacio" to {Embed Builder - Fields Values::%discord id of event-user%::*}
+					add "Vacio" to {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+					send "Se ha añadido correctamente el Field y su Valor" to event-channel with event-bot
+				else:
+					set {_string} to event-string
+					replace all "AddField:" with "" in {_string}
+					if {_string} contains "|":
+						set {_valores::*} to {_string} split at "|"
+						if size of {_valores::*} is more or equal to 3:
+							set {_c} to 0
+							loop size of {_valores::*} times:
+								add 1 to {_c}
+								if {_c} is not 1:
+									if {_valores fix} is not set:
+										set {_valores fix} to "%{_valores::%{_c}%}%"
+									else:
+										set {_valores fix} to "%{_valores fix}%|%{_valores::%{_c}%}%"
+									remove loop-value from {_valores::*}
+							set {_valores::2} to {_valores fix}
+							add {_valores::1} to {Embed Builder - Fields::%discord id of event-user%::*}
+							add {_valores::2} to {Embed Builder - Fields Values::%discord id of event-user%::*}
+							add "Normal" to {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+							send "Se ha añadido correctamente el Field y su Valor" to event-channel with event-bot
+						else:
+							if size of {_valores::*} is less or equal to 1:
+								send "Necesitas dar 2 valores para el Field, estos deben de ir separados con un |" to event-channel with event-bot
+								stop
+							add {_valores::1} to {Embed Builder - Fields::%discord id of event-user%::*}
+							add {_valores::2} to {Embed Builder - Fields Values::%discord id of event-user%::*}
+							add "Normal" to {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+							send "Se ha añadido correctamente el Field y su Valor" to event-channel with event-bot
+					else:
+						add {_string} to {Embed Builder - Fields::%discord id of event-user%::*}
+						add "Vacio" to {Embed Builder - Fields Values::%discord id of event-user%::*}
+						add "Normal" to {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+						send "Se ha añadido correctamente el Field y su Valor" to event-channel with event-bot
+			else if event-string in lower case starts with "addsfield":
+				if event-string in lower case is "addsfield":
+					add "VacioSplit" to {Embed Builder - Fields::%discord id of event-user%::*}
+					add "VacioSplit" to {Embed Builder - Fields Values::%discord id of event-user%::*}
+					add "VacioSplit" to {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+					send "Se ha añadido correctamente el Field y su Valor" to event-channel with event-bot
+				else:
+					set {_string} to event-string
+					replace all "AddSField:" with "" in {_string}
+					if {_string} contains "|":
+						set {_valores::*} to {_string} split at "|"
+						if size of {_valores::*} is more or equal to 3:
+							set {_c} to 0
+							loop size of {_valores::*} times:
+								add 1 to {_c}
+								if {_c} is not 1:
+									if {_valores fix} is not set:
+										set {_valores fix} to "%{_valores::%{_c}%}%"
+									else:
+										set {_valores fix} to "%{_valores fix}%|%{_valores::%{_c}%}%"
+									remove loop-value from {_valores::*}
+							set {_valores::2} to {_valores fix}
+							add {_valores::1} to {Embed Builder - Fields::%discord id of event-user%::*}
+							add {_valores::2} to {Embed Builder - Fields Values::%discord id of event-user%::*}
+							add "Split" to {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+							send "Se ha añadido correctamente el Field y su Valor" to event-channel with event-bot
+						else:
+							if size of {_valores::*} is less or equal to 1:
+								send "Necesitas dar 2 valores para el Field, estos deben de ir separados con un |" to event-channel with event-bot
+								stop
+							add {_valores::1} to {Embed Builder - Fields::%discord id of event-user%::*}
+							add {_valores::2} to {Embed Builder - Fields Values::%discord id of event-user%::*}
+							add "Split" to {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+							send "Se ha añadido correctamente el Field y su Valor" to event-channel with event-bot
+					else:
+						add {_string} to {Embed Builder - Fields::%discord id of event-user%::*}
+						add "Vacio" to {Embed Builder - Fields Values::%discord id of event-user%::*}
+						add "Split" to {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+						send "Se ha añadido correctamente el Field y su Valor" to event-channel with event-bot
+			else if event-string in lower case starts with "addbfield":
+				add "Blank" to {Embed Builder - Fields::%discord id of event-user%::*}
+				add "Blank" to {Embed Builder - Fields Values::%discord id of event-user%::*}
+				add "Blank" to {Embed Builder - Tipo de Field::%discord id of event-user%::*}
+				send "Se ha añadido correctamente el Blank Field (Campo Vacío)" to event-channel with event-bot
+			else if event-string in lower case starts with "addimg":
+				set {_string} to event-string
+				replace all "AddIMG:" with "" in {_string}
+				set {Embed Builder - Imagen::%discord id of event-user%} to {_string}
+				send "Añadiste correctamente la Imagen a tu embed" to event-channel with event-bot
+			else if event-string in lower case starts with "addthumb":
+				set {_string} to event-string
+				replace all "AddThumb:" with "" in {_string}
+				set {Embed Builder - Thumbnail::%discord id of event-user%} to {_string}
+				send "Añadiste correctamente la Imagen a tu embed" to event-channel with event-bot
+			else if event-string in lower case starts with "addtitle":
+				set {_string} to event-string
+				replace all "AddTitle:" with "" in {_string}
+				if {_string} contains "|":
+					set {_strings::*} to {_string} split at "|"
+					set {Embed Builder - Titulo::%discord id of event-user%::1} to {_strings::1}
+					set {Embed Builder - Titulo::%discord id of event-user%::2} to {_strings::2}
+					send "Añadiste correctamente el Titulo con su URL a tu embed" to event-channel with event-bot
+				else:
+					set {Embed Builder - Titulo::%discord id of event-user%::1} to {_string}
+					send "Añadiste correctamente el Titulo a tu embed" to event-channel with event-bot
+			else if event-string in lower case starts with "adddesc":
+				set {_string} to event-string
+				set {Embed Builder - Descripcion::%discord id of event-user%} to event-string
+				replace all "AddDesc:" with "" in {Embed Builder - Descripcion::%discord id of event-user%}
+				send "Añadiste correctamente la Descripción a tu embed" to event-channel with event-bot
+
+#! Sugerencia
+
+discord command n!sugerir:
+	trigger:
+		set {Sugiriendo::%discord id of event-user%} to true
+		create embed:
+			set title of the embed to "Estás creando una sugerencia."
+			set description of the embed to "<@%discord id of event-user%>, por favor enviame un mensaje al privado con tu sugerencia para que el mensaje no obstruya el de los demás. Una vez confirmes tu sugerencia esta se enviará al canal correspondiente."
+			set color of the embed to color from rgb 255, 136 and 0
+			set thumbnail of the embed to "%avatar of event-member%"
+			set footer of embed to footer with text "Sugerencias | Developed by Alexis.__l"
+		send last created embed to event-member with "Naruto"
+
+on direct message received by "Naruto":
+	if {Sugiriendo::%discord id of event-user%} is true:
+		if content of event-message in lower case is "?":
+			create embed:
+				set title of the embed to "Vista Previa de la Sugerencia."
+				if {Sugerencia::%discord id of event-user%} is set:
+					set description of the embed to "%{Sugerencia::%discord id of event-user%}%"
+				if {Sugiriendo Imagen::%discord id of event-user%} is set:
+					set image of the embed to {Sugiriendo Imagen::%discord id of event-user%}
+				set color of the embed to color from rgb 255, 136 and 0
+				add inline field named "¿Quieres cancelar tu Sugerencia?"  with the value "Escribe ``cancelar`` en el Chat." to embed
+				add inline field named "¿Quieres confirmar tu Sugerencia?"  with the value "Escribe ``confirmar`` en el Chat." to embed
+				add inline field named "¿Quieres ver tu Sugerencia?"  with the value "Escribe ``?`` en el Chat." to embed
+				add inline field named "¿Quieres adjuntar una imágen a tu Sugerencia?"  with the value "Escribe ``img:URL`` en el Chat." to embed
+				set thumbnail of the embed to "%avatar of event-user%"
+				set footer of embed to footer with text "Sugerencias | Developed by Alexis.__l"
+			send last created embed to event-user with "Naruto"
+		else if content of event-message in lower case is "cancelar":
+			delete {Sugiriendo::%discord id of event-user%}
+			delete {Sugiriendo Imagen::%discord id of event-user%}
+			create embed:
+				set title of the embed to "Sugerencia cancelada."
+				set description of the embed to "Has cancelado tu sugerencia correctamente."
+				set color of the embed to color from rgb 255, 136 and 0
+				add inline field named "¿Quieres crear una Sugerencia?"  with the value "Escribe ``n!sugerir`` en el Chat de Discord." to embed
+				set thumbnail of the embed to "%avatar of event-user%"
+				set footer of embed to footer with text "Sugerencias | Developed by Alexis.__l"
+			send last created embed to event-user with "Naruto"
+		else if content of event-message in lower case is "confirmar":
+			if {Sugiriendo::%discord id of event-user%} is set:
+				create embed:
+					set title of the embed to "Sugerencia enviada."
+					set description of the embed to "Has enviado correctamente tu sugerencia al canal <##752933812706476142>. Recuerda que tu sugerencia será tomada en cuenta por el Staff dependiendo de la cantidad de votos positivos (:thumbsup:) que obtenga."
+					set color of the embed to color from rgb 255, 136 and 0
+					set thumbnail of the embed to "%avatar of event-user%"
+					set footer of embed to footer with text "Sugerencias | Developed by Alexis.__l"
+				send last created embed to event-user with "Naruto"
+				create embed:
+					set title of the embed to "Sugerencia de %event-user%."
+					set description of the embed to "%{Sugerencia::%discord id of event-user%}%"
+					set image of the embed to {Sugiriendo Imagen::%discord id of event-user%}
+					set color of the embed to color from rgb 255, 136 and 0
+					add inline field named "¿Quieres enviar tu una Sugerencia?"  with the value "Escribe ``n!sugerir`` en el Chat de Discord." to embed
+					add inline field named "¿Te ha gustado esta sugerencia?" with the value "Reacciona con :thumbsup:" to embed
+					add inline field named "¿No te ha gustado esta sugerencia?" with the value "Reacciona con :thumbsdown:" to embed
+					set thumbnail of the embed to "%avatar of event-user%"
+					set footer of embed to footer with text "Sugerencias | Developed by Alexis.__l"
+				send last created embed to channel with id "752933812706476142" in guild with id "713384275134775379" with "Naruto" and store the message in {_msg}
+				add reaction "thumbsup" to {_msg} with "Naruto"
+				add reaction "thumbsdown" to {_msg} with "Naruto"
+				add {_msg} to {Sugerencias Creadas::%discord id of event-user%::*}
+				delete {Sugiriendo::%discord id of event-user%}
+				delete {Sugiriendo Imagen::%discord id of event-user%}
+		else if content of event-message in lower case starts with "img:":
+			set {Sugiriendo Imagen::%discord id of event-user%} to content of event-message
+			replace all "img:" with "" in {Sugiriendo Imagen::%discord id of event-user%}
+			create embed:
+				set title of the embed to "Vista Previa de la Sugerencia."
+				if {Sugerencia::%discord id of event-user%} is set:
+					set description of the embed to "%{Sugerencia::%discord id of event-user%}%"
+				set image of the embed to {Sugiriendo Imagen::%discord id of event-user%}
+				set color of the embed to color from rgb 255, 136 and 0
+				add inline field named "¿Quieres cancelar tu Sugerencia?"  with the value "Escribe ``cancelar`` en el Chat." to embed
+				add inline field named "¿Quieres confirmar tu Sugerencia?"  with the value "Escribe ``confirmar`` en el Chat." to embed
+				add inline field named "¿Quieres ver tu Sugerencia?"  with the value "Escribe ``?`` en el Chat." to embed
+				add inline field named "¿Quieres adjuntar una imágen a tu Sugerencia?"  with the value "Escribe ``img:URL`` en el Chat." to embed
+				set thumbnail of the embed to "%avatar of event-user%"
+				set footer of embed to footer with text "Sugerencias | Developed by Alexis.__l"
+			send last created embed to event-user with "Naruto"
+		else:
+			set {Sugerencia::%discord id of event-user%} to content of event-message
+			create embed:
+				set title of the embed to "¿Esta es tu sugerencia?"
+				set description of the embed to content of event-message
+				set color of the embed to color from rgb 255, 136 and 0
+				add inline field named "¿Quieres cancelar tu Sugerencia?"  with the value "Escribe ``cancelar`` en el Chat." to embed
+				add inline field named "¿Quieres confirmar tu Sugerencia?"  with the value "Escribe ``confirmar`` en el Chat." to embed
+				add inline field named "¿Quieres ver tu Sugerencia?"  with the value "Escribe ``?`` en el Chat." to embed
+				add inline field named "¿Quieres adjuntar una imágen a tu Sugerencia?"  with the value "Escribe ``img:URL`` en el Chat." to embed
+				add inline field named "¿Quieres cambiar tu Sugerencia?"  with the value "Escribe una nueva en el Chat." to embed
+				set thumbnail of the embed to "%avatar of event-user%"
+				set footer of embed to footer with text "Sugerencias | Developed by Alexis.__l"
+			send last created embed to event-user with "Naruto"		
+
+#! Preguntas
+
+discord command n!preguntas [<text>] [<text>]:
+	bots: Naruto
+	trigger:
+		if arg 1 is not set:
+			reply with "por favor menciona un argumento válido."
+		else:
+			if arg 1 in lower case is "agregar" or "añadir":
+				if arg 2 is not set:
+					create embed:
+						set title of the embed to "¡Error!"
+						set description of the embed to "<@%discord id of event-user%>, por favor utiliza el formato de forma correcta.... %nl%__**Ejemplos del formato**__:%nl%``n!interacciones pregunta <Pregunta|Respuesta|Link de Imagen (OPCIONAL)``%nl%%nl%``n!interacciones pregunta ¿Quién era el Relámpago Amarillo de Konoha?|Minato Namikaze``%nl%``n!interacciones pregunta ¿Qué Kekkei Genkai dominaba el personaje en la Imagen?|Ranton|https://pa1.narvii.com/6536/018bc35a3892f766a5f85263e475cebd3608e6ab_00.gif``"
+						set thumbnail of the embed to "%avatar of event-user%"
+						set color of the embed to color from rgb 255, 136 and 0
+						set footer of embed to footer with text "Interacciones | Developed by Alexis.__l"
+					send last created embed to event-channel with "Naruto"
+				else:
+					set {_c} to line count of file "plugins/Bot/PreguntasYRespuestas.yml"
+					if {_c} is more or equal to 1:
+						set {_a} to 0
+						loop {_c} times:
+							add 1 to {_a}
+							set {_l} to line {_a} in file "plugins/Bot/PreguntasYRespuestas.yml"
+							#set {_l} to line {_a} of file path "plugins/Bot/PreguntasYRespuestas.yml"
+							if "%{_l}%" is arg 2:
+								reply with "esta exacta pregunta ya está añadida al sistema, su ID es %{_a}%"
+								set {_ya esta} to true
+								stop this loop
+					if {_ya esta} is set:
+						stop
+					set {_cantidad argumentos::*} to arg 2 split at "|"
+					if size of {_cantidad argumentos::*} is more than 3:
+						reply with "has dado más de 3 argumentos para añadir la pregunta, el máximo permitidos son 3."
+						stop
+					else if size of {_cantidad argumentos::*} is less or equal to 1:
+						reply with "debes dar mínimo 2 argumentos para añadir la pregunta, es decir, añadir la pregunta y respuesta."
+						stop
+					else:
+						set {_pregunta} to {_cantidad argumentos::1}
+						set {_respuestas::*} to {_cantidad argumentos::2} split at ";"
+						if size of {_respuestas::*} is 1:
+							set {_respuesta} to {_respuestas::1}
+						else:
+							loop {_respuestas::*}:
+								if {_respuesta} is not set:
+									set {_respuesta} to loop-value
+								else:
+									set {_respuesta} to "%{_respuesta}%%nl%%loop-value%"
+									set {_muchas respuestas} to true
+						if {_cantidad argumentos::3} is set:
+							set {_img} to {_cantidad argumentos::3}
+					add 1 to {_c}
+					set line {_c} in file "plugins/Bot/PreguntasYRespuestas.yml" to arg 2
+					create embed:
+						set title of the embed to "¡Has añadido una pregunta!"
+						if {_muchas respuestas} is not set:
+							set description of the embed to "<@%discord id of event-user%>, has añadido una pregunta nueva al Sistema de Interacciones! La pregunta tiene la ID **%{_c}%**, para ver como quedó por favor utiliza el comando n!preguntas ver %{_c}%%nl%%nl%__**Pregunta**__:%nl%%{_pregunta}%%nl%%nl%__**Respuesta**__:%nl%%{_respuesta}%"
+						else:
+							set description of the embed to "<@%discord id of event-user%>, has añadido una pregunta nueva al Sistema de Interacciones! La pregunta tiene la ID **%{_c}%**, para ver como quedó por favor utiliza el comando n!preguntas ver %{_c}%%nl%%nl%__**Pregunta**__:%nl%%{_pregunta}%%nl%%nl%__**Respuestas**__:%nl%%{_respuesta}%"
+						if {_img} is set:
+							set image of the embed to {_img}
+						set thumbnail of the embed to "%avatar of event-user%"
+						set color of the embed to color from rgb 255, 136 and 0
+						set footer of embed to footer with text "Interacciones | Developed by Alexis.__l"
+					send last created embed to event-channel with "Naruto"
+			else if arg 1 in lower case is "editar":
+				if arg 2 is set:
+					set {_cantidad argumentos::*} to arg 2 split at "|"
+					if size of {_cantidad argumentos::*} is more than 4:
+						reply with "has dado más de 4 argumentos para añadir la pregunta, el máximo permitidos son 4."
+						stop
+					else if size of {_cantidad argumentos::*} is less or equal to 1:
+						reply with "debes dar mínimo 3 argumentos para añadir la pregunta, es decir, añadir la ID, la pregunta y respuesta."
+						stop
+					else:
+						set {_id} to {_cantidad argumentos::1} parsed as integer
+						set {_pregunta} to {_cantidad argumentos::2}
+						set {_respuestas::*} to {_cantidad argumentos::3} split at ";"
+						if size of {_respuestas::*} is 1:
+							set {_respuesta} to {_respuestas::1}
+						else:
+							loop {_respuestas::*}:
+								if {_respuesta} is not set:
+									set {_respuesta} to loop-value
+								else:
+									set {_respuesta} to "%{_respuesta}%%nl%%loop-value%"
+									set {_muchas respuestas} to true
+						if {_cantidad argumentos::4} is set:
+							set {_img} to {_cantidad argumentos::4}
+						# antes
+						set {_l::*} to line {_id} in file "plugins/Bot/PreguntasYRespuestas.yml" split at "|"
+						set {_pregunta antigua} to {_l::1}
+						set {_respuesta antigua} to {_l::2}
+						set {_respuestas antiguas::*} to {_l::2} split at ";"
+						if size of {_respuestas antiguas::*} is 1:
+							set {_respuesta antigua} to {_respuestas antiguas::1}
+						else:
+							loop {_respuestas antiguas::*}:
+								if {_respuesta antigua} is not set:
+									set {_respuesta antigua} to loop-value
+								else:
+									set {_respuesta antigua} to "%{_respuesta antigua}%%nl%%loop-value%"
+									set {_muchas respuestas antiguas} to true
+						if {_l::3} is set:
+							set {_imagen antigua} to {_l::3}
+						# cambio
+						if {_img} is set:
+							set {_imagen antigua} to {_l::4}
+							set line {_id} in file "plugins/Bot/PreguntasYRespuestas.yml" to "%{_pregunta}%|%{_respuesta}%|%{_img}%"
+						else:
+							set line {_id} in file "plugins/Bot/PreguntasYRespuestas.yml" to "%{_pregunta}%|%{_respuesta}%"
+						create embed:
+							set title of the embed to "¡Has editado una pregunta!"
+							if {_muchas respuestas} is not set:
+								if {_muchas respuestas antiguas} is not set:
+									set description of the embed to "<@%discord id of event-user%>, has editado la pregunta número %{_id}%, a continuación daremos la información antigua, y nueva de la pregunta.%nl%%nl%__**Pregunta y Respuesta Antigua**__:%nl%%{_pregunta antigua}%%nl%%nl%%{_respuesta antigua}%%nl%%nl%__**Pregunta y Respuesta Nueva**__:%nl%%{_pregunta}%%nl%%nl%%{_respuesta}%"
+								else:
+									set description of the embed to "<@%discord id of event-user%>, has editado la pregunta número %{_id}%, a continuación daremos la información antigua, y nueva de la pregunta.%nl%%nl%__**Pregunta y Respuestas Antiguas**__:%nl%%{_pregunta antigua}%%nl%%nl%%{_respuesta antigua}%%nl%%nl%__**Pregunta y Respuesta Nueva**__:%nl%%{_pregunta}%%nl%%nl%%{_respuesta}%"
+							else:
+								if {_muchas respuestas antiguas} is not set:
+									set description of the embed to "<@%discord id of event-user%>, has editado la pregunta número %{_id}%, a continuación daremos la información antigua, y nueva de la pregunta.%nl%%nl%__**Pregunta y Respuesta Antigua**__:%nl%%{_pregunta antigua}%%nl%%nl%%{_respuesta antigua}%%nl%%nl%__**Pregunta y Respuestas Nuevas**__:%nl%%{_pregunta}%%nl%%nl%%{_respuesta}%"
+								else:
+									set description of the embed to "<@%discord id of event-user%>, has editado la pregunta número %{_id}%, a continuación daremos la información antigua, y nueva de la pregunta.%nl%%nl%__**Pregunta y Respuestas Antiguas**__:%nl%%{_pregunta antigua}%%nl%%nl%%{_respuesta antigua}%%nl%%nl%__**Pregunta y Respuestas Nuevas**__:%nl%%{_pregunta}%%nl%%nl%%{_respuesta}%"
+							if {_img} is set:
+								set image of the embed to {_img}
+							else if {_imagen antigua} is set:
+								set image of the embed to {_imagen antigua}
+							set color of the embed to color from rgb 255, 136 and 0
+							set footer of embed to footer with text "Interacciones | Developed by Alexis.__l"
+						send last created embed to event-channel with "Naruto"
+				else:
+					reply with "¡Error! Por favor utiliza de forma correcta el comando, para editar una Pregunta y todo su contenido... Ejemplo del comando completo ``n!pregunta editar <ID|Pregunta|Respuesta|Imagen (OPCIONAL)>``"
+			else if arg 1 in lower case is "ver":
+				if arg 2 parsed as number is a number:
+					set {_l} to line arg 2 parsed as number in file "plugins/Bot/PreguntasYRespuestas.yml"
+					if {_l} is set:
+						set {_cantidad argumentos::*} to line arg 2 parsed as number in file "plugins/Bot/PreguntasYRespuestas.yml" split at "|"
+						set {_pregunta} to {_cantidad argumentos::1}
+						set {_respuestas::*} to {_cantidad argumentos::2} split at ";"
+						if size of {_respuestas::*} is 1:
+							set {_respuesta} to {_respuestas::1}
+						else:
+							loop {_respuestas::*}:
+								if {_respuesta} is not set:
+									set {_respuesta} to loop-value
+								else:
+									set {_respuesta} to "%{_respuesta}%%nl%%loop-value%"
+									set {_muchas respuestas} to true
+						if {_cantidad argumentos::3} is set:
+							set {_img} to {_cantidad argumentos::3}
+						create embed:
+							set title of the embed to "Viendo pregunta con ID %arg 2%"
+							if {_muchas respuestas} is not set:
+								set description of the embed to "<@%discord id of event-user%>, esta es la pregunta con ID %arg 2%.%nl%%nl%__**Pregunta**__:%nl%%{_pregunta}%%nl%%nl%__**Respuesta**__:%nl%%{_respuesta}%"
+							else:
+								set description of the embed to "<@%discord id of event-user%>, esta es la pregunta con ID %arg 2%.%nl%%nl%__**Pregunta**__:%nl%%{_pregunta}%%nl%%nl%__**Respuestas**__:%nl%%{_respuesta}%"
+							if {_img} is set:
+								set image of the embed to {_img}
+							set thumbnail of the embed to "%avatar of event-user%"
+							set color of the embed to color from rgb 255, 136 and 0
+							set footer of embed to footer with text "Interacciones | Developed by Alexis.__l"
+						send last created embed to event-channel with "Naruto"
+					else:
+						reply with "no existe una pregunta con la ID %arg 2%"
+				else:
+					reply with "por favor menciona una ID válida para ver la pregunta."
+			else if arg 1 in lower case is "lista":
+				if arg 2 is not set:
+					create embed:
+						set title of the embed to "Lista de Preguntas [%line count of file ""plugins/Bot/PreguntasYRespuestas.yml""% Preguntas]"
+						set description of the embed to {_pregunta}
+						set color of the embed to color from rgb 255, 136 and 0
+						set footer of embed to footer with text "Página 1 | Developed by Alexis.__l"
+						set {_c} to 0
+						loop 15 times:
+							add 1 to {_c}
+							if {_c} is less or equal to line count of file "plugins/Bot/PreguntasYRespuestas.yml":
+								if line {_c} in file "plugins/Bot/PreguntasYRespuestas.yml" is not "":
+									set {_linea::*} to line {_c} in file "plugins/Bot/PreguntasYRespuestas.yml" split at "|"
+									add inline field named "Pregunta número %{_c}%" with the value {_linea::1} to embed
+					send last created embed to event-channel with "Naruto"
+				else:
+					set {_p} to arg 2 parsed as integer
+					if {_p} is a integer:
+						if {_p} * 15 is more than line count of file "plugins/Bot/PreguntasYRespuestas.yml":
+							if difference between {_p} * 15 and line count of file "plugins/Bot/PreguntasYRespuestas.yml" is more or equal to 15:
+								reply with "no hay suficientes preguntas para procesar la página requerida."
+								set {_mucho} to true
+						if {_mucho} is not set:
+							create embed:
+								set title of the embed to "Lista de Preguntas [%line count of file ""plugins/Bot/PreguntasYRespuestas.yml""% Preguntas]"
+								set description of the embed to {_pregunta}
+								set color of the embed to color from rgb 255, 136 and 0
+								set footer of embed to footer with text "Página %{_p}% | Developed by Alexis.__l"
+								set {_c} to {_p} * 15 - 15
+								loop 15 times:
+									add 1 to {_c}
+									if {_c} is less or equal to line count of file "plugins/Bot/PreguntasYRespuestas.yml":
+										if line {_c} in file "plugins/Bot/PreguntasYRespuestas.yml" is not "":
+											set {_linea::*} to line {_c} in file "plugins/Bot/PreguntasYRespuestas.yml" split at "|"
+											add inline field named "Pregunta número %{_c}%" with the value {_linea::1} to embed
+							send last created embed to event-channel with "Naruto"
+			else if arg 1 in lower case is "prueba":
+				set {_c} to line count of file "plugins/Bot/PreguntasYRespuestas.yml"
+				set {Prueba Pregunta} to random integer between 1 and {_c}
+				set {_l} to line {Prueba Pregunta} in file "plugins/Bot/PreguntasYRespuestas.yml"
+				set {_cantidad argumentos::*} to line {Prueba Pregunta} in file "plugins/Bot/PreguntasYRespuestas.yml" split at "|"
+				set {_pregunta} to {_cantidad argumentos::1}
+				if {_cantidad argumentos::3} is set:
+					set {_img} to {_cantidad argumentos::3}
+				create embed:
+					set title of the embed to "¡Pregunta!"
+					set description of the embed to {_pregunta}
+					if {_img} is set:
+						set image of the embed to {_img}
+					set color of the embed to color from rgb 255, 136 and 0
+					set footer of embed to footer with text "Interacciones | Developed by Alexis.__l"
+				send last created embed to event-channel with "Naruto"
+
+on server message received by "Naruto":
+	if {Prueba Pregunta} is set:
+		set {_cantidad argumentos::*} to line {Prueba Pregunta} in file "plugins/Bot/PreguntasYRespuestas.yml" split at "|"
+		set {_respuestas::*} to {_cantidad argumentos::2} split at ";"
+		if {_respuestas::*} contains event-string:
+			create embed:
+				set title of the embed to "¡Lo has hecho muy bien!"
+				set description of the embed to "<@%discord id of event-user%> ¡Lo has hecho fenomenal! Has contestado correctamente la pregunta número %{Prueba Pregunta}%.%nl%%nl%__**Pregunta**__:%nl%%{_cantidad argumentos::1}%%nl%%nl%__**Respuesta**__:%nl%%{_cantidad argumentos::2}%"
+				set image of the embed to "https://d.wattpad.com/story_parts/541986850/images/1517fdb49fb7b062680898750924.jpg"
+				set color of the embed to color from rgb 255, 136 and 0
+				set footer of embed to footer with text "Interacciones | Developed by Alexis.__l"
+			send last created embed to event-channel with "Naruto"
+			delete {Prueba Pregunta}
+
+#! No pregunten huevadas
+
+on server message received by "Naruto":
+	if event-string in lower case is "cual es la ip", "la ip?", "ip del servidor?", "ip del sv", "ip del server" or "cuando abre":
+		set {_si} to true
+	else if event-string in lower case start with "cual es la ip", "la ip?", "ip del servidor?", "ip del sv", "ip del server" or "cuando abre":
+		set {_si} to true
+	else if event-string in lower case end with "cual es la ip", "la ip?", "ip del servidor?", "ip del sv", "ip del server" or "cuando abre":
+		set {_si} to true
+	if {_si} is set:
+		# https://forms.gle/SJh411pHdr5zbQQs5
+		reply with "<@%discord id of event-user%>, te he enviado mediante un mensaje privado información que podría ser de relevancia para ti."
+		create embed:
+			set title of the embed to title with text "Información actual sobre el servidor" and url "https://linktr.ee/NarutoRevolution"
+			set description of the embed to "El servidor actualmente se encuentra bajo desarrollo, por lo tanto no hay una IP definida para que entre todo publico, tampoco tenemos una fecha aproximada que determine cuando el proyecto será abierto de forma oficial.%nl%%nl%Te recomendamos ver los avances del Servidor en el [Canal de Youtube](https://www.youtube.com/channel/UC6nh9yz7LmnU0gmaZ6-T9ow) del Owner Alexis o también visitando los canales <##714163158327230496>, <##714162897126686752> y <##714163104388481045>%nl%%nl%En caso de que quieras aportar con tu granito de arena puedes hacerlo, tenemos un [formulario](https://forms.gle/SJh411pHdr5zbQQs5) el cual te permitirá postularte a los siguientes equipos: **Creativo**, **Desarrollo**, **Constructor** y **Artístico**. O en caso de que no quieras postularte a ser Staff, puedes sugerir ideas para implementar al Servidor.%nl%%nl%¡Esperamos tu participación y tu apoyo!%nl%%nl%ATTE: Staff de Naruto Revolution."
+			set footer of embed to footer with text "Atención automática | Developed by Alexis.__l"
+			#set thumbnail of the embed to "%avatar of event-user%"
+		send last created embed to event-user with "Naruto"
+
+#! Comandos
+
+discord command n!redes:
+	aliases: social, sociales, redessociales
+	trigger:
+		create embed:
+			set title of the embed to "Redes Sociales de Naruto Revolution"
+			set description of the embed to "Hola, <@%discord id of event-user%>.%nl%A continuación te daré una lista con todas nuestras Redes Sociales y Links varios que podrían ser de relevancia para ti.%nl%Asegúrate de seguir y estar al tanto en todas nuestras redes para obtener información sobre el Servidor en general."
+			add inline field named "__Twitter__" with value "[Click aquí](https://twitter.com/NarutoRevolt) para ir a Twitter" to embed
+			add inline field named "__Discord__" with value "[Click aquí](https://t.co/UzTowdTOpr?amp=1) para ir a Discord" to embed
+			add inline field named "__Youtube__" with value "[Click aquí](https://www.youtube.com/channel/UCrKRz4GaFBTHs5uAuTSRu9A) para ir a Discord" to embed
+			add inline field named "__Formulario Kage__" with value "[Click aquí](https://forms.gle/eW7rmmhoTuAkMDMbA) para ir al Formulario de Kage" to embed
+			add inline field named "__Linktr.ee__" with value "[Click aquí](https://linktr.ee/NarutoRevolution) para ir a Linktr.ee" to embed
+			add inline field named "__Formulario Staff__" with value "[Click aquí](https://forms.gle/SJh411pHdr5zbQQs5) para ir a Formulario de Staff" to embed
+			set thumbnail of the embed to "%avatar of event-member%"
+			set footer of embed to footer with text "Naruto Revolution | Developed by Alexis.__l"
+		send last created embed to event-channel with "Naruto"
