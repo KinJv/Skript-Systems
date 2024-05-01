@@ -1,0 +1,235 @@
+import:
+	org.bukkit.Bukkit
+
+command /dar-estrellas [<player>] [<integer>]:
+	permission: blackclover.core.estrellar
+	trigger:
+		if arg-1 and arg-2 is set:
+			if {Orden::%arg-1%} is set:
+				set {_reino} to {Reino %arg-1%}
+				set {_estrellas} to arg-2
+				set {_orden} to {Orden::%arg-1%}
+				add {_estrellas} to {Estrellas Reino::%{_reino}%}
+				add {_estrellas} to {Estrellas Orden::%{_orden}%}
+				add {_estrellas} to {Estrellas Ganadas::%arg-1%}
+				send action bar "&6¡&eGanaste &6%{_estrellas}% &eestrellas&6!" to arg-1
+			else:
+				send "&cNo tiene orden" to player
+		else:
+			send "&6&l(&eESTRELLAS&6&l) &eUsa el comando de forma correcta: /dar-estrellas (Usuario) (Estrellas)" to player
+
+command /estrellas:
+	trigger:
+		if {Orden::%player%} is set:
+			if {Estrellas Reino::%{Reino %player%}%} is not set:
+				set {Estrellas Reino::%{Reino %player%}%} to 0
+			if {Estrellas Orden::%{Orden::%player%}%} is not set:
+				set {Estrellas Orden::%{Orden::%player%}%} to 0
+			if {Estrellas Ganadas::%player%} is not set:
+				set {Estrellas Ganadas::%player%} to 0
+			set {_p} to player
+			set {_inv} to Bukkit.createInventory(null, 27, "&e&lEstrellas")
+			{_p}.openInventory({_inv})
+			set slot 13 of {_p}'s current inventory to player's skull named "&eTus Estrellas" with lore "&7", "&7Rango&8: &7%{Rango Orden::%player%}%", "&7Estrellas Ganadas&8: &7%{Estrellas Ganadas::%player%}%"
+			set slot 11 of {_p}'s current inventory to book named "&eEstrellas de la Orden" with lore "&7", "&7Orden&8: &7%{Orden::%player%}%", "&7Estrellas Ganadas&8: &7%{Estrellas Orden::%{Orden::%player%}%}%"
+			set slot 15 of {_p}'s current inventory to paper named "&eEstrellas del Reino" with lore "&7", "&7Reino&8: &7%{Reino %player%}%", "&7Estrellas Ganadas&8: &7%{Estrellas Reino::%{Reino %player%}%}%"
+		else:
+			send "&c¡No tienes una orden!" to player
+
+command /dar-orden <player> [<text>]:
+	permission: blackclover.core.estrellar
+	trigger:
+		if arg-1 and arg-2 is set:
+			set {Rango Orden::%player%} to "Caballero Básico V"
+			set {Precio Estrellas Ascender::%player%} to 100
+			if arg-2 is "Primera Orden":
+				set {Orden::%arg-1%} to arg-2
+				send "&eLe diste la Orden &c%arg-2% &ea &9%arg-1%"
+			else if arg-2 is "Segunda Orden":
+				set {Orden::%arg-1%} to arg-2
+				send "&eLe diste la Orden &c%arg-2% &ea &9%arg-1%"
+			else if arg-2 is "Primer Escuadron":
+				set {Orden::%arg-1%} to arg-2
+				send "&eLe diste la Orden &c%arg-2% &ea &9%arg-1%"
+			else if arg-2 is "Segundo Escuadron":
+				set {Orden::%arg-1%} to arg-2
+				send "&eLe diste la Orden &c%arg-2% &ea &9%arg-1%"
+			else if arg-2 is "Leones Carmesis":
+				set {Orden::%arg-1%} to arg-2
+				send "&eLe diste la Orden &c%arg-2% &ea &9%arg-1%"
+			else if arg-2 is "Aguilas Plateadas":
+				set {Orden::%arg-1%} to arg-2
+				send "&eLe diste la Orden &c%arg-2% &ea &9%arg-1%"
+			else if arg-1 and arg-2 is not set:
+				send "&c¡Utiliza bien el comando!"
+
+command /ver-miembros [<text>]:
+	trigger:
+		if arg is set:
+			loop all offline players:
+				if {Orden::%loop-value%} is arg:
+					add "%nl%&e✦ &b%loop-value%&3&l(%{Estrellas Ganadas::%loop-value%}%)" to {_xd::*}
+			set {_xd::*} to "%{_xd::*}%"
+			replace all "and" and "," with " " in {_xd::*}
+			send "&9&L%arg%: &b%{_xd::*}%" to player
+command /ver-miembros-orden:
+	trigger:
+		if {Orden::%player%} is set:
+			loop all offline players:
+				if {Orden::%loop-value%} is {Orden::%player%}:
+					add "%nl%&e✦ &b%loop-value%&3&l(%{Estrellas Ganadas::%loop-value%}%)" to {_xd::*}
+			set {_xd::*} to "%{_xd::*}%"
+			replace all "and" and "," with " " in {_xd::*}
+			send "&9&L%{Orden::%player%}%: &b%{_xd::*}%" to player
+		else:
+			send "&c¡No tienes una orden!" to player
+
+on inventory click:
+	if name of current inventory of player contains "&e&lEstrellas":
+		cancel event
+
+command /ascender-rango [<player>]:
+	trigger:
+		if arg is set:
+			ascenderRango(arg)
+
+function ascenderRango(p: player):
+	if {Orden::%{_p}%} is set:
+		if {Precio Estrellas Ascender::%{_p}%} is not set:
+			set {Precio Estrellas Ascender::%{_p}%} to 100
+		if {Estrellas Ganadas::%{_p}%} is more or equal to {Precio Estrellas Ascender::%{_p}%}:
+			if {Rango Orden::%{_p}%} is "Caballero Básico":
+				set {Rango Orden::%{_p}%} to "Caballero Básico V"
+				set {Precio Estrellas Ascender::%{_p}%} to 200
+				set {Mejora Maxima Rango::%{_p}%} to 5
+				if {_p} has permission "no.setear":
+					stop
+				else:
+					if {Reino %{_p}%} is "&2Reino del Trebol":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-basico-t"
+					if {Reino %{_p}%} is "&9Reino del Diamante":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-basico-d"
+					if {Reino %{_p}%} is "&cReino del Corazón":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-basico-c"
+				make console execute command "lp user %{_p}% parent settrack clases v"
+			if {Rango Orden::%{_p}%} is not set:
+				set {Rango Orden::%{_p}%} to "Caballero Básico V"
+				set {Precio Estrellas Ascender::%{_p}%} to 200
+				set {Mejora Maxima Rango::%{_p}%} to 5
+				make console execute command "lp user %{_p}% parent settrack clases v"
+				if {_p} has permission "no.setear":
+					stop
+				else:
+					if {Reino %{_p}%} is "&2Reino del Trebol":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-basico-t"
+					if {Reino %{_p}%} is "&9Reino del Diamante":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-basico-d"
+					if {Reino %{_p}%} is "&cReino del Corazón":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-basico-c"
+			if {Rango Orden::%{_p}%} is "Caballero Básico V":
+				set {Rango Orden::%{_p}%} to "Caballero Básico IV"
+				set {Precio Estrellas Ascender::%{_p}%} to 300
+				set {Mejora Maxima Rango::%{_p}%} to 6
+				make console execute command "lp user %{_p}% parent settrack clases iv"
+			else if {Rango Orden::%{_p}%} is "Caballero Básico IV":
+				set {Rango Orden::%{_p}%} to "Caballero Básico III"
+				set {Precio Estrellas Ascender::%{_p}%} to 400
+				set {Mejora Maxima Rango::%{_p}%} to 7
+				make console execute command "lp user %{_p}% parent settrack clases iii"
+			else if {Rango Orden::%{_p}%} is "Caballero Básico III":
+				set {Rango Orden::%{_p}%} to "Caballero Básico II"
+				set {Precio Estrellas Ascender::%{_p}%} to 500
+				set {Mejora Maxima Rango::%{_p}%} to 8
+				make console execute command "lp user %{_p}% parent settrack clases ii"
+			else if {Rango Orden::%{_p}%} is "Caballero Básico II":
+				set {Rango Orden::%{_p}%} to "Caballero Básico I"
+				set {Precio Estrellas Ascender::%{_p}%} to 700
+				set {Mejora Maxima Rango::%{_p}%} to 9
+				make console execute command "lp user %{_p}% parent settrack clases i"
+			else if {Rango Orden::%{_p}%} is "Caballero Básico I":
+				set {Rango Orden::%{_p}%} to "Caballero Intermedio V"
+				set {Precio Estrellas Ascender::%{_p}%} to 900
+				set {Mejora Maxima Rango::%{_p}%} to 10
+				make console execute command "lp user %{_p}% parent settrack clases v"
+				if {_p} has permission "no.setear":
+					stop
+				else:
+					if {Reino %{_p}%} is "&2Reino del Trebol":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-intermedio-t"
+					if {Reino %{_p}%} is "&9Reino del Diamante":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-intermedio-d"
+					if {Reino %{_p}%} is "&cReino del Corazón":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-intermedio-c"
+			else if {Rango Orden::%{_p}%} is "Caballero Intermedio V":
+				set {Rango Orden::%{_p}%} to "Caballero Intermedio IV"
+				set {Precio Estrellas Ascender::%{_p}%} to 1100
+				set {Mejora Maxima Rango::%{_p}%} to 11
+				make console execute command "lp user %{_p}% parent settrack clases iv"
+			else if {Rango Orden::%{_p}%} is "Caballero Intermedio IV":
+				set {Rango Orden::%{_p}%} to "Caballero Intermedio III"
+				set {Precio Estrellas Ascender::%{_p}%} to 1300
+				set {Mejora Maxima Rango::%{_p}%} to 12
+				make console execute command "lp user %{_p}% parent settrack clases iii"
+			else if {Rango Orden::%{_p}%} is "Caballero Intermedio III":
+				set {Rango Orden::%{_p}%} to "Caballero Intermedio II"
+				set {Precio Estrellas Ascender::%{_p}%} to 1500
+				set {Mejora Maxima Rango::%{_p}%} to 13
+				make console execute command "lp user %{_p}% parent settrack clases ii"	
+			else if {Rango Orden::%{_p}%} is "Caballero Intermedio II":
+				set {Rango Orden::%{_p}%} to "Caballero Intermedio I"
+				set {Precio Estrellas Ascender::%{_p}%} to 1750
+				set {Mejora Maxima Rango::%{_p}%} to 14
+				make console execute command "lp user %{_p}% parent settrack clases i"
+			else if {Rango Orden::%{_p}%} is "Caballero Intermedio I":
+				set {Rango Orden::%{_p}%} to "Caballero Avanzado V"
+				set {Precio Estrellas Ascender::%{_p}%} to 2000
+				set {Mejora Maxima Rango::%{_p}%} to 15
+				make console execute command "lp user %{_p}% parent settrack clases v"
+				if {_p} has permission "no.setear":
+					stop
+				else:
+					if {Reino %{_p}%} is "&2Reino del Trebol":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-avanzado-t"
+					if {Reino %{_p}%} is "&9Reino del Diamante":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-avanzado-d"
+					if {Reino %{_p}%} is "&cReino del Corazón":
+						make console execute command "lp user %{_p}% parent settrack rangos caballero-avanzado-c"
+			else if {Rango Orden::%{_p}%} is "Caballero Avanzado V":
+				set {Rango Orden::%{_p}%} to "Caballero Avanzado IV"
+				set {Precio Estrellas Ascender::%{_p}%} to 2250
+				set {Mejora Maxima Rango::%{_p}%} to 16
+				make console execute command "lp user %{_p}% parent settrack clases iv"
+			else if {Rango Orden::%{_p}%} is "Caballero Avanzado IV":
+				set {Rango Orden::%{_p}%} to "Caballero Avanzado III"
+				set {Precio Estrellas Ascender::%{_p}%} to 2500
+				set {Mejora Maxima Rango::%{_p}%} to 17
+				make console execute command "lp user %{_p}% parent settrack clases iii"
+			else if {Rango Orden::%{_p}%} is "Caballero Avanzado III":
+				set {Rango Orden::%{_p}%} to "Caballero Avanzado II"
+				set {Precio Estrellas Ascender::%{_p}%} to 2750
+				set {Mejora Maxima Rango::%{_p}%} to 18
+				make console execute command "lp user %{_p}% parent settrack clases ii"
+			else if {Rango Orden::%{_p}%} is "Caballero Avanzado II":
+				set {Rango Orden::%{_p}%} to "Caballero Avanzado I"
+				set {Mejora Maxima Rango::%{_p}%} to 19
+				set {Precio Estrellas Ascender::%{_p}%} to 3000
+				make console execute command "lp user %{_p}% parent settrack clases i"
+			else if {Rango Orden::%{_p}%} is "Caballero Avanzado I":
+				set {Rango Orden::%{_p}%} to "Gran Caballero Mágico"
+				set {Mejora Maxima Rango::%{_p}%} to 20
+				set {Precio Estrellas Ascender::%{_p}%} to "Rango Máximo Alcanzado"
+				if {_p} has permission "no.setear":
+					stop
+				else:
+					if {Reino %{_p}%} is "&2Reino del Trebol":
+						make console execute command "lp user %{_p}% parent settrack rangos gran-caballero-t"
+					if {Reino %{_p}%} is "&9Reino del Diamante":
+						make console execute command "lp user %{_p}% parent settrack rangos gran-caballero-d"
+					if {Reino %{_p}%} is "&cReino del Corazón":
+						make console execute command "lp user %{_p}% parent settrack rangos gran-caballero-c"
+			send "&8&l(&7RANGOS&8&l) &7¡Subiste al rango &8%{Rango Orden::%{_p}%}%&7!" to {_p}
+		else:
+			send "&8&l(&7RANGOS&8&l) &7¡No tienes las estrellas necesarias para ascender! &8(&7%({Precio Estrellas Ascender::%{_p}%} - {Estrellas Ganadas::%{_p}%})% &7estrellas faltantes&8)" to {_p}
+	else:
+		send "&4&l(&c&l!&4&l) &fNecesitas ser &6Caballero Basico &fpara interactuar con este NPC." to {_p}
+
