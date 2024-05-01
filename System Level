@@ -1,0 +1,205 @@
+import:
+	org.bukkit.event.entity.EntityRegainHealthEvent
+	com.nisovin.magicspells.MagicSpells
+	com.nisovin.magicspells.mana.ManaChangeReason
+	org.bukkit.Bukkit
+	com.nisovin.magicspells.variables.Variable
+
+on join:
+	if {Vida::%player%} is not set:
+		set {Vida::%player%} to 0
+	if {Fuerza::%player%} is not set:
+		set {Fuerza::%player%} to 0
+	if {Resistencia::%player%} is not set:
+		set {Resistencia::%player%} to 0
+	if {Agilidad::%player%} is not set:
+		set {Agilidad::%player%} to 0
+	if {Mana::%player%} is not set:
+		set {Mana::%player%} to 0
+	if {Nivel::%player%} is not set:
+		set {Nivel::%player%} to 0
+	if {Experiencia::%player%} is not set:
+		set {Experiencia::%player%} to 0
+	if {Puntos Atributos::%player%} is not set:
+		set {Puntos Atributos::%player%} to 0
+	if {Experiencia Necesaria::%player%} is not set:
+		set {Experiencia Necesaria::%player%} to 10000
+	if {Mejora Maxima Rango::%player%} is not set:
+		set {Mejora Maxima Rango::%player%} to 5
+
+command /personaje [<player>]:
+	aliases: /pj
+	trigger:
+		set {_inv} to Bukkit.createInventory(null, 27, "&lAtributos %player%")
+		set {_p} to player
+		{_p}.openInventory({_inv})
+		set slot 13 of player's current inventory to skull of player named "&6&l✤ &ePersonaje&6: &e%player% &6&l✤" with lore "&7", "&6&l✦ &eNombre&6: &e%player%", "&6&l✦ &eNivel&6: &e%{Nivel::%player%}%", "&6&l✦ &eExperiencia&6: &e%{Experiencia::%player%}%&6/&e%{Experiencia Necesaria::%player%}%", "&6&l✦ &ePuntos de Atributos&6: &e%{Puntos Atributos::%player%}%"
+		set slot 9 of player's current inventory to orange stained glass pane named "&4&l✦ &cVida &4&l✦" with lore "&7", "&7La vida es un atributo importante,", "&7pues definirá tu vitalidad y duración", "&7a lo largo de tu aventura.", "&7", "&cNivel de vida&4: &c%{Vida::%player%}%&4/&c20"
+		set slot 11 of player's current inventory to yellow stained glass pane named "&6&l✦ &eFuerza &6&l✦" with lore "&7", "&7La fuerza es un atributo primordial", "&7que definirá la letalidad con la que le", "&7haces daño a tus adversarios.", "&7", "&eNivel de Fuerza&6: &e%{Fuerza::%player%}%&6/&e20"
+		set slot 15 of player's current inventory to white stained glass pane named "&f&l✦ &fAgilidad &f&l✦" with lore "&7", "&7Aumetar tu agilidad te ayudará a", "&7esquivar los ataques enemigos.", "&7", "&fNivel de agilidad: &f%{Agilidad::%player%}%&f/20"
+		set slot 17 of player's current inventory to light blue stained glass pane named "&3&l✦ &bManá &3&l✦" with lore "&7", "&7Aumentar tu atributo de maná ayudará", "&7a que aumentes tu control sobre el maná,", "&7y por ende tu cantidad de este mismo.", "&7", "&bNivel de maná&3: &b%{Mana::%player%}%&3/&b20"
+		set slot 0,18,2,20,6,24,8,26 of player's current inventory to weeping vines named "&6"
+		set slot 4,22 of player's current inventory to twisting vines named "&6"
+		set {_c} to -1
+		#while {_c} is less than 54:
+			#add 1 to {_c}
+			#if {_c} is 22, 2, 6, 19, 38, 42 or 25:
+				#add 1 to {_c}
+			#if {_c} is less than 45:
+				#set slot {_c} of player's current inventory to light blue stained glass pane named "&5" with lore "&7"
+			#else:
+				#set slot {_c} of player's current inventory to blue stained glass pane named "&5" with lore "&7"
+
+on inventory click:
+	if name of current inventory of player contains "&lAtributos %player%":
+		cancel event
+		if event-slot is 9: #Vida
+			mejorarStats(player, "vida")
+		else if event-slot is 11:
+			mejorarStats(player, "fuerza")
+		else if event-slot is 15:
+			mejorarStats(player, "agilidad")
+		else if event-slot is 17:
+			mejorarStats(player, "mana")
+
+#! Funciones
+
+function mejorarStats(p: player, stat: text):
+	if {_stat} is "vida":
+		if {Puntos Atributos::%{_p}%} is more or equal to 1:
+			if {Vida::%{_p}%} is less than {Mejora Maxima Rango::%{_p}%}:
+				remove 1 from {Puntos Atributos::%{_p}%}
+				add 1 to {Vida::%{_p}%}
+				add 1 to {_p}'s maximum health
+				set slot 9 of {_p}'s current inventory to lime stained glass pane named "&a&l¡Atributo mejorado!"
+				wait 1 second
+				set slot 9 of {_p}'s current inventory to orange stained glass pane named "&4&l✦ &cVida &4&l✦" with lore "&7", "&7La vida es un atributo importante,", "&7pues definirá tu vitalidad y duración", "&7a lo largo de tu aventura.", "&7", "&cNivel de vida&4: &c%{Vida::%{_p}%}%&4/&c20"
+			else:
+				set slot 9 of {_p}'s current inventory to red stained glass pane named "&c&l¡Nivel máximo alcanzado!"
+				wait 1 second
+				set slot 9 of {_p}'s current inventory to orange stained glass pane named "&4&l✦ &cVida &4&l✦" with lore "&7", "&7La vida es un atributo importante,", "&7pues definirá tu vitalidad y duración", "&7a lo largo de tu aventura.", "&7", "&cNivel de vida&4: &c%{Vida::%{_p}%}%&4/&c20"
+		else:
+			set slot 9 of {_p}'s current inventory to red stained glass pane named "&c&l¡No tienes puntos de mejora!"
+			wait 1 second
+			set slot 9 of {_p}'s current inventory to gunpowder named "&4&l✦ &cVida &4&l✦" with lore "&7", "&7La vida es un atributo importante,", "&7pues definirá tu vitalidad y duración", "&7a lo largo de tu aventura.", "&7", "&cNivel de vida&4: &c%{Vida::%{_p}%}%&4/&c20"
+	else if {_stat} is "fuerza":
+		if {Puntos Atributos::%{_p}%} is more or equal to 1:
+			if {Fuerza::%{_p}%} is less than {Mejora Maxima Rango::%{_p}%}:
+				remove 1 from {Puntos Atributos::%{_p}%}
+				add 1 to {Fuerza::%{_p}%}
+				set slot 11 of {_p}'s current inventory to lime stained glass pane named "&a&l¡Atributo mejorado!"
+				wait 1 second
+				set slot 11 of {_p}'s current inventory to yellow stained glass pane named "&6&l✦ &eFuerza &6&l✦" with lore "&7", "&7La fuerza es un atributo primordial", "&7que definirá la letalidad con la que le", "&7haces daño a tus adversarios.", "&7", "&eNivel de Fuerza&6: &e%{Fuerza::%{_p}%}%&6/&e20"
+			else:
+				set slot 11 of {_p}'s current inventory to red stained glass pane named "&c&l¡Nivel máximo alcanzado!"
+				wait 1 second
+				set slot 11 of {_p}'s current inventory to yellow stained glass pane named "&6&l✦ &eFuerza &6&l✦" with lore "&7", "&7La fuerza es un atributo primordial", "&7que definirá la letalidad con la que le", "&7haces daño a tus adversarios.", "&7", "&eNivel de Fuerza&6: &e%{Fuerza::%{_p}%}%&6/&e20"
+		else:
+			set slot 11 of {_p}'s current inventory to red stained glass pane named "&c&l¡No tienes puntos de mejora!"
+			wait 1 second
+			set slot 11 of {_p}'s current inventory to yellow stained glass pane named "&6&l✦ &eFuerza &6&l✦" with lore "&7", "&7La fuerza es un atributo primordial", "&7que definirá la letalidad con la que le", "&7haces daño a tus adversarios.", "&7", "&eNivel de Fuerza&6: &e%{Fuerza::%{_p}%}%&6/&e20"
+	else if {_stat} is "resistencia":
+		if {Puntos Atributos::%{_p}%} is more or equal to 1:
+			if {Resistencia::%{_p}%} is less than {Mejora Maxima Rango::%{_p}%}:
+				remove 1 from {Puntos Atributos::%{_p}%}
+				add 1 to {Resistencia::%{_p}%}
+				set slot 11 of {_p}'s current inventory to lime stained glass pane named "&a&l¡Atributo mejorado!"
+				wait 1 second
+				set slot 11 of {_p}'s current inventory to yellow stained glass pane named "&8&l✦ &7Resistencia &8&l✦" with lore "&7", "&7Aumentar tus defensas ayudará a", "&7que dures más tiempo en combate", "&7", "&7Nivel de resistencia&8: &7%{Resistencia::%{_p}%}%&8/&720"
+			else:
+				set slot 11 of {_p}'s current inventory to red stained glass pane named "&c&l¡Nivel máximo alcanzado!"
+				wait 1 second
+				set slot 11 of {_p}'s current inventory to yellow stained glass pane named "&8&l✦ &7Resistencia &8&l✦" with lore "&7", "&7Aumentar tus defensas ayudará a", "&7que dures más tiempo en combate", "&7", "&7Nivel de resistencia&8: &7%{Resistencia::%{_p}%}%&8/&720"
+		else:
+			set slot 11 of {_p}'s current inventory to red stained glass pane named "&c&l¡No tienes puntos de mejora!"
+			wait 1 second
+			set slot 11 of {_p}'s current inventory to yellow stained glass pane named "&8&l✦ &7Resistencia &8&l✦" with lore "&7", "&7Aumentar tus defensas ayudará a", "&7que dures más tiempo en combate", "&7", "&7Nivel de resistencia&8: &7%{Resistencia::%{_p}%}%&8/&720"
+	else if {_stat} is "agilidad":
+		if {Puntos Atributos::%{_p}%} is more or equal to 1:
+			if {Agilidad::%{_p}%} is less than {Mejora Maxima Rango::%{_p}%}:
+				remove 1 from {Puntos Atributos::%{_p}%}
+				add 1 to {Agilidad::%{_p}%}
+				set slot 15 of {_p}'s current inventory to lime stained glass pane named "&a&l¡Atributo mejorado!"
+				wait 1 second
+				set slot 15 of {_p}'s current inventory to white stained glass pane named "&f&l✦ &fAgilidad &f&l✦" with lore "&7", "&7Aumetar tu agilidad te ayudará a", "&7aprender y agilizar cómo esquivas los ataques enemigos.", "&7", "&fNivel de agilidad: &f%{Agilidad::%{_p}%}%&f/20"
+			else:
+				set slot 15 of {_p}'s current inventory to red stained glass pane named "&c&l¡Nivel máximo alcanzado!"
+				wait 1 second
+				set slot 15 of {_p}'s current inventory to gunpowder named "&f&l✦ &fAgilidad &f&l✦" with lore "&7", "&7Aumetar tu agilidad te ayudará a", "&7aprender y agilizar cómo esquivas los ataques enemigos.", "&7", "&fNivel de agilidad: &f%{Agilidad::%{_p}%}%&f/20"
+		else:
+			set slot 15 of {_p}'s current inventory to red stained glass pane named "&c&l¡No tienes puntos de mejora!"
+			wait 1 second
+			set slot 15 of {_p}'s current inventory to white stained glass pane named "&f&l✦ &fAgilidad &f&l✦" with lore "&7", "&7Aumetar tu agilidad te ayudará a", "&7aprender y agilizar cómo esquivas los ataques enemigos.", "&7", "&fNivel de agilidad: &f%{Agilidad::%{_p}%}%&f/20"
+	else if {_stat} is "mana":
+		if {Puntos Atributos::%{_p}%} is more or equal to 1:
+			if {Mana::%{_p}%} is less than {Mejora Maxima Rango::%{_p}%}:
+				remove 1 from {Puntos Atributos::%{_p}%}
+				add 1 to {Mana::%{_p}%}
+				set slot 17 of {_p}'s current inventory to lime stained glass pane named "&a&l¡Atributo mejorado!"
+				set {_mana2} to ({Mana::%{_p}%} * 10)
+				set {_mana} to MagicSpells.getVariableManager().getValue("ManaIncS", {_p})
+				if {_p} has permission "vida.rey":
+					MagicSpells.getVariableManager().set("ManaMax", {_p}.getName(), 200+{_mana}+{_mana2})
+				else if {_p} has permission "vida.capitan":
+					MagicSpells.getVariableManager().set("ManaMax", {_p}.getName(), 150+{_mana}+{_mana2})
+				else:
+					MagicSpells.getVariableManager().set("ManaMax", {_p}.getName(), 100+{_mana}+{_mana2})
+				wait 1 second
+				set slot 17 of {_p}'s current inventory to light blue stained glass pane named "&3&l✦ &bManá &3&l✦" with lore "&7", "&7Aumentar tu atributo de maná ayudará", "&7a que aumentes tu control sobre el maná,", "&7y por ende tu cantidad de este mismo.", "&7", "&bNivel de maná&3: &b%{Mana::%{_p}%}%&3/&b20"
+			else:
+				set slot 17 of {_p}'s current inventory to red stained glass pane named "&c&l¡Nivel máximo alcanzado!"
+				wait 1 second
+				set slot 17 of {_p}'s current inventory to light blue stained glass pane named "&3&l✦ &bManá &3&l✦" with lore "&7", "&7Aumentar tu atributo de maná ayudará", "&7a que aumentes tu control sobre el maná,", "&7y por ende tu cantidad de este mismo.", "&7", "&bNivel de maná&3: &b%{Mana::%{_p}%}%&3/&b20"
+		else:
+			set slot 17 of {_p}'s current inventory to red stained glass pane named "&c&l¡No tienes puntos de mejora!"
+			wait 1 second
+			set slot 17 of {_p}'s current inventory to light blue stained glass pane named "&3&l✦ &bManá &3&l✦" with lore "&7", "&7Aumentar tu atributo de maná ayudará", "&7a que aumentes tu control sobre el maná,", "&7y por ende tu cantidad de este mismo.", "&7", "&bNivel de maná&3: &b%{Mana::%{_p}%}%&3/&b20"
+
+command /dar-experiencia [<player>] [<integer>]:
+	permission: blackclover.core.experiencia
+	trigger:
+		if arg-1 and arg-2 is set:
+			set {_experiencia} to arg-2
+			if {XP Booster::%arg-1%} is set:
+				set {_experiencia} to {_experiencia} * {XP Booster::%arg-1%}
+			add {_experiencia} to {Experiencia::%arg-1%}
+			send action bar "&eGanaste &6%{_experiencia}% &ede experiencia" to arg-1
+			set {_si} to 0
+			while {Experiencia::%arg-1%} is more or equal to {Experiencia Necesaria::%arg-1%}:
+				remove {Experiencia Necesaria::%arg-1%} from {Experiencia::%arg-1%}
+				set {Experiencia Necesaria::%arg-1%} to {Experiencia Necesaria::%arg-1%} * 1 + 1500
+				add 1 to {_si}
+				add 1 to {Nivel::%arg-1%}
+				add 1 to {Puntos Atributos::%arg-1%}
+				if {_si} is 1:
+					send title "&e&l¡Alcanzaste el nivel %{Nivel::%arg-1%}%&e&l!" with subtitle "&7Felicidades, subiste un nivel" to arg-1
+				else:
+					send title "&e&l¡Alcanzaste el nivel %{Nivel::%arg-1%}%&e&l!" with subtitle "&7Felicidades, subiste %{_si}% &7niveles" to arg-1
+
+command /reiniciar-atributos:
+	trigger:
+		set player's maximum health to 20
+		set {Vida::%player%} to 0
+		set {Fuerza::%player%} to 0
+		set {Agilidad::%player%} to 0
+		set {Mana::%player%} to 0
+		set {Nivel::%player%} to 0
+		set {Experiencia::%player%} to 0
+		set {Puntos Atributos::%player%} to 0
+		set {Experiencia Necesaria::%player%} to 10000
+		set {Mejora Maxima Rango::%player%} to 5
+
+#! Handler
+
+on damage:
+	if {Agilidad::%victim%} is set:
+		set {_probabilidad esquivo} to {Agilidad::%victim%}
+		set {_probabilidad} to random integer between 1 and 100
+		if {_probabilidad} is less or equal to {_probabilidad esquivo}:
+			send action bar "&eEsquivaste el ataque" to victim
+			send action bar "&e%victim% esquivó tu ataque" to attacker
+			cancel event
+	set {_fuerza} to {Fuerza::%attacker%} / 4
+	set {_damage} to damage 
+	add {_fuerza} to {_damage}
+	set damage to {_damage}
