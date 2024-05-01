@@ -1,0 +1,92 @@
+import:
+	# MagicSpells
+	com.nisovin.magicspells.events.ManaChangeEvent
+	com.nisovin.magicspells.mana.ManaChangeReason
+	com.nisovin.magicspells.events.SpellCastEvent
+	# Citizens
+	net.citizensnpcs.api.event.NPCRightClickEvent
+
+#! Virus del Chakra
+ #- Virus del Chakra: Una enfermedad que surge del uso excesivo del chakra. En términos del gameplay afectará el uso de chakra entre otras cosas.
+  #> Intensidad: Grave.
+  #> Causa o % de Adquisición: Uso excesivo de chakra... Un ejemplo de su aplicación podría ser que si el usuario usa un cierta cantidad de chakra
+     #en una semana es posible que padezca de esta enfermedad.
+  #> Síntomas: 
+   #- Fase 1: Fiebre (Fase 1) e Incapacidad para usar Chakra en un 50%.
+   #- Fase 2: Fiebre (Fase 2) e Incapacidad para usar Chakra en un 100%.
+  #> Tratamiento: Deberán tomar cada 12 horas un Antibiótico (-5%) y Análgesico (-5%).
+
+on join:
+	if {Enfermedades Virus Chakra Semana::%player%} is not set:
+		set {Enfermedades Virus Chakra Semana::%player%} to now
+
+on ManaChangeEvent:
+	if event.getOldAmount() is more than event.getNewAmount():
+		if event.getReason() is ManaChangeReason.SPELL_COST!:
+			if difference between {Enfermedades Virus Chakra Semana::%event.getPlayer()%} and now is more than 7 days:
+				set {Enfermedades Virus Chakra Semana::%event.getPlayer()%} to now
+				set {Enfermedades Virus Chakra Usado::%event.getPlayer()%} to 0
+			if {Virus de Chakra::%event.getPlayer()%} is not set:
+				set {_mana antiguo} to event.getOldAmount()
+				set {_mana nuevo} to event.getNewAmount()
+				set {_valor absoluto} to difference between {_mana antiguo} and {_mana nuevo}
+				add {_valor absoluto} to {Enfermedades Virus Chakra Usado::%event.getPlayer()%}
+				if {Rango::%event.getPlayer()%} is "&7Gennin Academia" or "&7Gennin":
+					set {_chakra maximo por jutsu} to 25
+				else if {Rango::%event.getPlayer()%} is "&2Chunin":
+					set {_chakra maximo por jutsu} to 45
+				else:
+					set {_chakra maximo por jutsu} to 65
+				if {Enfermedades Virus Chakra Usado::%event.getPlayer()%} is more than {_chakra maximo por jutsu} * 100:
+					set {Virus de Chakra::%event.getPlayer()%} to 1
+					send action bar "&cSientes un mal estar en tu organismo..." to event.getPlayer()
+			else:
+				set {_mana antiguo} to event.getOldAmount()
+				set {_mana nuevo} to event.getNewAmount()
+				set {_valor absoluto} to difference between {_mana antiguo} and {_mana nuevo}
+				add {_valor absoluto} to {Enfermedades Virus Chakra Usado::%event.getPlayer()%}
+				if {Rango::%event.getPlayer()%} is "&7Gennin Academia" or "&7Gennin":
+					set {_chakra maximo por jutsu} to 25
+				else if {Rango::%event.getPlayer()%} is "&2Chunin":
+					set {_chakra maximo por jutsu} to 45
+				else:
+					set {_chakra maximo por jutsu} to 65
+				if {Enfermedades Virus Chakra Usado::%event.getPlayer()%} is more than {_chakra maximo por jutsu} * 120:
+					set {Virus de Chakra::%event.getPlayer()%} to 2
+					send action bar "&cSientes un gran dolor de cabeza..." to event.getPlayer()
+
+on SpellCastEvent:
+	if "%event.getSpellCastState()%" is not "ON_COOLDOWN":
+		if {Virus de Chakra::%event.getCaster()%} is set:
+			if {Enfermedades Virus Chakra Usado::%event.getCaster()%} is more than {_chakra maximo por jutsu} * 130:
+				set {Hospitalizado::%event.getCaster()%} to true
+				send title "&4&lHospitalizado..." with subtitle "&cNo trataste tu enfermedad y has sido hospitalizado" to event.getCaster()
+				set {_aldea} to uncolored {Aldea::%event.getCaster()%}
+				teleport event.getCaster() to {Hospital %{_aldea}%}
+				event.setCancelled(true)
+				stop
+			if {Virus de Chakra::%event.getCaster()%} is 1:
+				chance of 50%:
+					chance of 10%:
+						apply nausea of tier 1 to event.getCaster() for 5 seconds
+						send action bar "&cTe sientes mareado..." to event.getCaster()
+					event.setCancelled(true)
+					message "&cEl Virus del Chakra ha afectado el funcionamiento normal de tu Chakra, volviendolo inestable... Por lo tanto no has conseguido utilizar el Jutsu" to event.getCaster()
+			else:
+				chance of 40%:
+					apply nausea of tier 5 to event.getCaster() for 10 seconds
+					send action bar "&cTe sientes mareado..." to event.getCaster()
+				event.setCancelled(true)
+				message "&cEl Virus del Chakra ha afectado ferozmente el funcionamiento normal de tu Chakra, volviendolo totalmente inestable... Por lo tanto no has conseguido utilizar el Jutsu" to event.getCaster()
+
+#! Enfermerxs y Doctorxs
+
+on NPCRightClickEvent:
+	if event.getNPC().getName() contains "enfermer" or "doctor":
+		if {Virus de Chakra::%event.getClicker()%} is set:
+			set {_virus de chakra} to text component "&8- &bVirus del Chakra"
+			add hover event with action SHOW_TEXT with "&8--------[ &eInformación &8]--------%nl%&bFase: &e%{Virus de Chakra::%event.getClicker()%}%%nl%&bChakra Usado: &e%{Enfermedades Virus Chakra Usado::%event.getClicker()%}%" to {_virus de chakra}
+			add {_virus de chakra} to {_textos::*}
+		message "&aTienes las siguientes enfermedades:" to event.getClicker()
+		loop {_textos::*}:
+			message text component loop-value to event.getClicker()
