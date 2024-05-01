@@ -1,0 +1,24 @@
+#Funcion para abrir libros virtuales con texto custom a users.
+import:
+    org.bukkit.inventory.meta.BookMeta
+    org.bukkit.inventory.meta.BookMeta$BookMetaBuilder
+    org.bukkit.inventory.ItemStack
+    net.kyori.adventure.text.Component
+
+function openBook(paginas: strings, users: players, titulo: text = "Skript Book", autor: text = "Skript"):
+    close {_users::*}'s inventory
+    set {_book} to new ItemStack(Material.WRITTEN_BOOK)
+    set {_builder} to {_book}.getItemMeta().clone().toBuilder()
+    loop {_paginas::*}:
+        {_builder}.addPage(Component.text(loop-value))
+    {_builder}.author(Component.text({_autor}))
+    {_builder}.title(Component.text({_titulo}))
+    {_book}.setItemMeta({_builder}.build())
+    loop {_users::*}:
+        loop-value.openBook({_book})
+
+#Ejemplo:
+command /personaje:
+  trigger:
+    set {_texto} to "Nivel: %{nivel::%player%}%%nl%Exp: %{Exp::%player%}%"
+    openBook({_texto}, player)
